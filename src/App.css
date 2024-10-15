@@ -1,0 +1,915 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Montserrat';
+}
+
+button {
+  cursor: pointer;
+}
+
+.map_icon {
+  border-radius: 50%;
+  border: 3px solid #4C3779;
+}
+
+.badges-videos {
+  margin-right: 2px
+}
+
+/* Cliente */
+/* Página Inicial */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 90px;
+  padding-top: 90px;
+}
+
+.containerChat {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.titulo {
+  font-size: 25px;
+  font-weight: 400;
+  margin-bottom: 5%;
+}
+
+.prestadorBusca {
+  padding: 1% 2% 0%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.prestadorBuscaImg {
+  margin-right: 5%;
+}
+
+.prestadorBuscaInfo {
+  font-size: 15px;
+  color: black;
+  flex-shrink: 0;
+}
+
+.prestadorBuscaInfo h2 {
+  font-weight: 600;
+  margin-bottom: -3%;
+}
+
+.prestadorBuscaInfo h3 {
+  font-weight: 400;
+}
+
+.chatCard {
+  padding: 1% 2% 0%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none !important;
+  color:black;
+}
+
+.chatCardPrestador {
+  flex-shrink: 0;
+}
+
+.chatCardContent {
+  padding: 1% 2% 0%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-decoration: none !important;
+  color:black;
+}
+
+.chatCardImg {
+  margin-right: 5%;
+}
+
+.chatCardStatus p {
+  font-size: 13px;
+}
+
+.destaque {
+  padding: 1% 2% 0%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-decoration: none !important;
+}
+
+.destaqueImg {
+  margin-right: 5%;
+}
+
+.destaquePrestador {
+  font-size: 15px;
+  color: black;
+  flex-shrink: 0;
+}
+
+.destaquePrestador h2 {
+  font-weight: 600;
+  margin-bottom: -3%;
+}
+
+.destaquePrestador h3 {
+  font-weight: 400;
+}
+
+a:link { 
+  text-decoration: none; 
+} 
+a:visited { 
+  text-decoration: none; 
+} 
+a:hover { 
+  text-decoration: none; 
+} 
+a:active { 
+  text-decoration: none; 
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin-bottom: 5%;
+}
+
+.sidebar {
+  background-color: white;
+  padding: 5% 0.5% 0.5% 0.5%;
+  bottom: 0;
+  position: fixed;
+  height: 95vh;
+  width: fit-content;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.sidebar > .icons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+}
+
+.sidebar > .icons > a {
+  color: black;
+  font-size: 17px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Footer */
+
+.footer {
+  background-color: white;
+  padding: 2% 0.5% 0.5% 0.5%;
+  bottom: 0;
+  position: fixed;
+  height: 50px;
+  width: 100vw;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.icons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.icons img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Header */
+
+.header {
+  padding: 1% 2% 0%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+}
+
+.logo {
+  height: 5vh;
+}
+
+.btnTroca {
+  margin-left: 30%;
+  text-transform: uppercase;
+  background-color: white;
+  padding: 0.5%;
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 1vw;
+  color: #4C3779;
+  border: 1.5px solid #4C3779;
+}
+
+/* Busca */
+
+:where(.css-dev-only-do-not-override-11xg00t).ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button {
+  background-color: #4C3779 !important;
+}
+
+.searchBar {
+  display: flex;
+}
+
+.forumLink {
+  color: #4C3779;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.categoriaCard {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+/* Cartão Prestador */
+.cartao {
+  background-image: url('components/assets/bgs/cartao.jpg');
+  height: 400px;
+  width: 100%;
+  background-size: cover;
+  display: flex;
+  color: white;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.cartaoLogo {
+  margin-bottom: 37%;
+  margin-left: -10%;
+  margin-right: -15%;
+}
+
+.cartaoLogo img {
+  height: 100px;
+}
+
+.cartaoImg {
+  border: 1px solid #ffab00;
+  border-radius: 100%;
+  height: 220px;
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cartaoImg img {
+  border: 2px solid #ffab00;
+  height: 180px;
+  width: 180px;
+}
+
+.cartaoIcons {
+  background-color: white;
+  width: 40px;
+  height: 150px;
+  border-radius: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 10%;
+}
+
+.cartaoIcons div {
+  background-color: #604d95;
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cartaoDados p {
+  margin-top: -20px;
+}
+
+.cartaoPLink {
+  color: #ffab00;
+}
+
+.cartaoPLink:hover {
+  cursor: pointer;
+  color: #ffab00;
+}
+
+.pds img {
+  width: 70px;
+  height: 70px;
+}
+
+/* Listagem de Prestadores */
+
+.servicoBuscado {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardPrestador .anticon svg {
+  color: #FFAB00;
+}
+
+.distancia {
+  font-size: 15px;
+  text-align: center;
+}
+
+.distancia h3 {
+  font-weight: 400;
+  margin-bottom: -20%;
+}
+
+.detalhes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avaliacao {
+  
+}
+
+.cardPrestador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Chat */
+
+.enviarMsg {
+  background-color: #F2ECFF;
+  width: 100vw;
+  height: 15vh;
+  display: flex;
+  align-content: center;
+  margin-left: -6%;
+}
+
+.btnConfirmar {
+  border: none;
+  border-radius: 10px;
+  background-color: #4C3779;
+  color: white;
+  font-weight: 600;
+  width: 80%;
+  height: 5vh;
+  font-size: 20px;
+}
+
+.btnCancelar {
+  border: solid 1px #4C3779;
+  border-radius: 10px;
+  background-color: white;
+  color: #4C3779;
+  font-weight: 600;
+  width: 80%;
+  height: 5vh;
+  font-size: 20px;
+}
+
+.solicitacoes {
+  font-weight: 400;
+  margin-top: -3%;
+}
+
+.fotoSolicitacao {
+  border-radius: 50%;
+  border: solid 2px #4C3779;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* Perfil Prestador */
+
+.dados-prestador h4 {
+  font-weight: 400;
+  margin-top: -3%;
+}
+
+.rating {
+  margin-top: -3%;
+  font-weight: 600;
+}
+
+.rating .anticon svg {
+  color: #FFAB00;
+}
+
+.iconPrestador {
+  border-radius: 50%;
+  border: solid 2px #4C3779;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.iconPesquisa {
+  border-radius: 50%;
+  border: solid 2px #4C3779;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* LEARNING */
+
+.videoAula {
+  width: 430px;
+  height: 246px;
+  background-color: #D9D9D9
+}
+
+.videoTags {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.videoTags p {
+  background-color: pink;
+  padding: 0.9%;
+  font-size: 0.7vw;
+  border-radius: 20px;
+  margin-right: 1.5%;
+  flex-shrink: 0;
+}
+
+.videosTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3%;
+}
+
+.videos {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardPlaylist {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1%;
+  border: solid 1px #D9D9D9;
+  border-radius: 10px;
+}
+
+.videoPlaylist {
+  width: 200px;
+  height: 130px;
+  background-color: #D9D9D9
+}
+
+.videoPInfo {
+  display: flex;
+}
+
+.tag {
+  background-color: #6B4CF2;
+  border-radius: 15px;
+  color: white;
+  font-weight: 400;
+  width: 25%;
+  margin-left: 5%;
+  text-align: center;
+}
+
+.tags {
+  display: flex;
+  align-items: right;
+}
+
+/* Login */
+
+.login {
+  margin-top: 0;
+  padding: 0;
+  width: 100vw;
+  height: 120vh;
+  background-color: #32145B;
+}
+
+.text {
+  font-size: 15px;
+  margin: 2% 0 2% 0;
+  display: block;
+  textAlign: center;
+  marginTop: 20px;
+  color: #FFF;
+  font-weight: 300;
+}
+
+.hoverQtn {
+  margin-left: 2%;
+  flex-shrink: 0;
+  background-color: #D9D9D9;
+  width: 3%;
+  border-radius: 100%;
+  color: #A6A6A6;
+  text-align: center;
+  
+}
+
+.btnCel {
+  display: none;
+}
+
+.btnPC {
+  display: block;
+}
+
+.reportBtn{
+  margin-left: 35%;
+}
+
+@media only screen and (max-width: 600px) {
+
+  .cartao {
+    background-image: url('components/assets/bgs/cartao.jpg');
+    height: 200px;
+    width: 100%;
+    background-size: cover;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .reportBtn{
+    margin-left: 5%;
+  }
+
+  .cartaoLogo {
+    margin-bottom: 38%;
+    margin-left: -5%;
+    margin-right: -7%;
+  }
+
+  .cartaoLogo img {
+    height: 50px;
+  }
+
+  .cartaoImg {
+    border: 1px solid #ffab00;
+    border-radius: 100%;
+    height: 110px;
+    width: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cartaoImg img {
+    border: 2px solid #ffab00;
+    height: 90px;
+    width: 90px;
+  }
+
+  .cartaoIcons {
+    background-color: white;
+    width: 20px;
+    height: 75px;
+    border-radius: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 10%;
+  }
+
+  .cartaoIcons img {
+    height: 7px !important;
+  }
+
+  .cartaoIcons div {
+    background-color: #604d95;
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cartaoDados p {
+    margin-top: -12px;
+    font-size: 8px;
+  }
+
+  .cartaoDados h2 {
+    font-size: 15px;
+  }
+
+  .cartaoDados h3 {
+    font-size: 12px;
+  }
+  
+  .tituloCadastro {
+    font-size: 15px;
+  }
+  
+  .chatCard {
+    flex-direction: column;
+  }
+
+  .chatCardPrestador h2 {
+    font-size: 20px;
+  }
+  
+  .digitalPartnerLink {
+    display: none;
+  }
+
+  .btnCel {
+    display: block;
+  }
+  
+  .btnPC {
+    display: none;
+  }
+
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding-bottom: 90px;
+  }
+
+  body {
+    font-family: 'Montserrat';
+  }
+
+  .titulo {
+    font-size: 4.2vw;
+    font-weight: 400;
+    margin-bottom: 5%;
+  }
+  
+  .destaque {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    margin-bottom: 5%;
+    text-decoration: none !important;
+  }
+
+  .destaqueImg {
+    margin-right: 5%;
+  }
+
+  .destaquePrestador {
+    font-size: 2.5vw;
+    color: black;
+  }
+
+  .destaquePrestador h2 {
+    font-weight: 600;
+    margin-bottom: -10%;
+  }
+
+  .destaquePrestador h3 {
+    font-weight: 400;
+  }
+
+  .distancia {
+    font-size: 3vw;
+    text-align: center;
+  }
+  
+  .btnTroca {
+    margin-left: 0;
+    text-transform: uppercase;
+    background-color: white;
+    padding: 2%;
+    border-radius: 7px;
+    font-weight: 500;
+    font-size: 3.5vw;
+    color: #4C3779;
+    border: 1.5px solid #4C3779;
+  }
+
+  .footer {
+    background-color: white;
+    padding: 5% 0 10% 0;
+    bottom: 0;
+    position: fixed;
+    height: 1px;
+    width: 100vw;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .btnConfirmar {
+    border: none;
+    border-radius: 10px;
+    background-color: #4C3779;
+    color: white;
+    font-weight: 600;
+    width: 80vw;
+    height: 5vh;
+    font-size: 3.5vw;
+  }
+
+  .btnCancelar {
+    border: solid 1px #4C3779;
+    border-radius: 10px;
+    background-color: white;
+    color: #4C3779;
+    font-weight: 600;
+    width: 80vw;
+    height: 5vh;
+    font-size: 3.5vw;
+  }
+
+
+  .destaqueImg {
+    margin-right: 5%;
+    flex-shrink: 0;
+  }
+
+  .destaquePrestador {
+    font-size: 3.5vw;
+    color: black;
+    flex-grow: 1;
+  }
+
+  .destaquePrestador h2 {
+    font-weight: 600;
+    margin-bottom: -3%;
+    font-size: 4.5vw;
+  }
+
+  .destaquePrestador h3 {
+    font-weight: 400;
+    font-size: 3.5vw;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px 0;
+    margin-bottom: 5%;
+  }
+
+  .categoriaCard img {
+    width: 120px;
+  }
+
+  .cardPrestador {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .destaque {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .avaliacao {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .chatHeaderImgSize {
+    width: 60px !important; /* Tamanho menor da foto em dispositivos móveis */
+    height: 60px !important;
+  }
+
+  .chatHeaderNameText {
+    font-size: 16px; /* Tamanho menor da fonte em dispositivos móveis */
+    
+  }
+
+  .distancia {
+    margin-top: 10px;
+    text-align: left;
+  }
+  
+  .statusText {
+    font-size: 10px; /* Tamanho menor da fonte para status */
+  }
+
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 20px;
+  padding: 10px;
+  padding-top: 0;
+}
+
+.chatHeaderImg {
+  flex-shrink: 0;
+  margin-right: 5%;
+}
+
+.chatHeaderImgSize {
+  width: 80px; /* Tamanho padrão da foto */
+  height: 80px;
+  object-fit: cover;
+  border: solid 2px #4C3779;
+  border-radius: 50%;
+}
+
+.chatHeaderName {
+  display: flex;
+  align-items: center;
+}
+
+.chatHeaderNameText {
+  margin: 0;
+  font-size: 20px; /* Tamanho da fonte para desktop */
+  font-weight: bold;
+}
+
+.caseContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.caseContent {
+  text-align: left;
+  flex: 2;
+}
+
+.caseTitle {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.userImage {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  object-fit: cover;
+  margin-right: 8px;
+}
+
+.caseDate, .commentSection {
+  flex: 1;
+  text-align: right;
+}
+
+/* Estilos responsivos para mobile */
+@media (max-width: 768px) {
+  .caseContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .caseTitle {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .caseDate, .commentSection {
+    width: 100%;
+    text-align: left;
+    margin-top: 5px;
+  }
+}
+
+.notif {
+  margin-right: 5%;
+}
