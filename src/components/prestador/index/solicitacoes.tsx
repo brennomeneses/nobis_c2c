@@ -39,7 +39,7 @@ const App: React.FC<{ foto: string, nome: string, nota: number, serviceUUID: str
           }
         } else if (response.status === 406) {
           return response.text().then(data => {
-            message.error(`Sem créditos suficientes. Por favor, compre mais créditos de serviço para aceitar esta solicitação.`);
+            message.error(`Ops! Você está sem créditos! Para aceitar esta e outras solicitações, basta assinar um de nossos planos.`);
           });
         } else {
           return response.text().then(data => {

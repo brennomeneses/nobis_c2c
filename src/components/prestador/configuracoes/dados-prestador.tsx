@@ -55,7 +55,7 @@ const App: React.FC = () => {
                 <h3>{userData.user.isClient === 0 ? userData.user.role : 'Cliente'}</h3>
                 <Link to={"/compra-creditos"} style={{ cursor: "pointer" }}>
                   <p style={{ fontWeight: "500", color: 'black' }}>
-                    Créditos de serviço: {userData.tokens || 0} - Plano Atual: {getPlanoAtual()}
+                    Créditos de solicitações de serviço: {userData.tokens || 0} - Plano Atual: {getPlanoAtual()}
                   </p>
                 </Link>
               </>

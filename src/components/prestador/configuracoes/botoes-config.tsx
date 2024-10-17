@@ -117,7 +117,7 @@ const App: React.FC = () => {
         <Divider />
         <br />
         <Link to={"/compra-creditos"} style={{ color: "black" }}>
-          <DollarOutlined /> Comprar créditos de serviço
+          <DollarOutlined /> Comprar pacotes de serviço
         </Link>
         <br /><br />
         <Divider />

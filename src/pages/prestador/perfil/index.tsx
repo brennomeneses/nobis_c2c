@@ -60,9 +60,8 @@ export default function Inicio() {
 
   const handleSave = async (values) => {
     try {
-      // Reformatando a data de nascimento para o formato AAAA-MM-DD
       const formattedBirthdate = moment(values.birthdate, 'DD/MM/YYYY').format('YYYY-MM-DD');
-  
+      
       const response = await fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/${uuid}`, {
         method: 'PUT',
         headers: {
@@ -72,28 +71,30 @@ export default function Inicio() {
         body: JSON.stringify({
           ...values,
           operationRadius: values.serviceRadius,
-          birthdate: formattedBirthdate, // Data reformada
+          birthdate: formattedBirthdate,
           payments: values.paymentTypes ? values.paymentTypes.join(', ') : '',
         }),
       });
   
       if (!response.ok) {
-        throw new Error('Failed to update profile data');
+        throw new Error('Erro ao tentar atualizar perfil. Por favor tente novamente.');
       }
   
       message.success('Dados atualizados com sucesso!');
-      
-      // Refetch dos dados para garantir a atualização correta
+  
+      // Atualizar o estado com os dados mais recentes, sem recarregar a página
       const updatedDataResponse = await fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/profile/${uuid}`);
       const updatedData = await updatedDataResponse.json();
   
-      setDados(updatedData[0]); // Atualiza com os dados mais recentes
+      setDados(updatedData[0]); // Atualiza os dados
       setEditMode(false); // Sai do modo de edição
+      window.location.reload();
     } catch (error) {
-      console.error('Error updating profile data:', error);
-      message.error('Failed to update profile');
+      console.error('Erro ao tentar atualizar perfil:', error);
+      message.error('Erro ao tentar atualizar perfil. Por favor tente novamente.');
     }
   };
+  
   
 
   if (loading) {
