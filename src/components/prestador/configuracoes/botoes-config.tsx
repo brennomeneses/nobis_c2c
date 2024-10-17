@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserOutlined, CommentOutlined, DollarOutlined, LogoutOutlined, HistoryOutlined, QuestionCircleOutlined, SnippetsOutlined } from '@ant-design/icons';
-import { Divider, Modal, Button, Checkbox } from 'antd';
+import { Divider, Modal, Button, Checkbox, message } from 'antd';
 import { Link } from 'react-router-dom';
 import Cartao from '../configuracoes/cartao';
 import html2canvas from 'html2canvas';
@@ -11,14 +11,18 @@ const App: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showEmail, setShowEmail] = useState(true);
   const [showAddress, setShowAddress] = useState(true);
+  const [planoAtual, setPlanoAtual] = useState<string | null>(null); // Estado para armazenar o plano atual
   const cartaoRef = useRef<HTMLDivElement>(null);
 
   const uuid = localStorage.getItem("userUuid");
 
+  useEffect(() => {
+    const storedPlano = localStorage.getItem('planoAtual');
+    setPlanoAtual(storedPlano); // Obter o plano do localStorage
+  }, []);
+
   const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('isClient');
-    localStorage.removeItem('userUuid');
+    localStorage.clear();
   };
 
   const showModal = () => {
@@ -27,6 +31,34 @@ const App: React.FC = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const cancelSubscription = async () => {
+    const authToken = localStorage.getItem('authToken');
+    
+    if (!authToken) {
+      message.error("Token de autorização não encontrado.");
+      return;
+    }
+
+    try {
+      const response = await fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/payments/0', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        message.success("Assinatura cancelada com sucesso.");
+      } else {
+        message.error("Falha ao cancelar a assinatura.");
+      }
+    } catch (error) {
+      console.error("Erro ao cancelar assinatura:", error);
+      message.error("Erro ao cancelar assinatura.");
+    }
   };
 
   const downloadImage = async (format: 'jpg' | 'pdf') => {
@@ -55,13 +87,11 @@ const App: React.FC = () => {
         const imgData = canvas.toDataURL('image/png', 1.0);
         const pdf = new jsPDF('landscape', 'px', [canvas.width, canvas.height]);
 
-        // Definir a largura e altura do PDF para coincidir com o conteúdo
         pdf.internal.pageSize.width = canvas.width;
         pdf.internal.pageSize.height = canvas.height;
 
         pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
 
-        // Adicionar link clicável para o perfil
         pdf.link(0, 0, canvas.width, canvas.height, { url: `${window.location.hostname}/prestador/${uuid}` });
 
         pdf.save('cartao-digital.pdf');
@@ -115,6 +145,17 @@ const App: React.FC = () => {
         </Link>
         <br /><br />
         <Divider />
+        <br /><br />
+        
+        {/* Mostrar o botão de cancelar assinatura apenas se o plano não for "Gratuito" */}
+        {planoAtual !== 'Gratuito' && (
+          <>
+            <center>
+              <Button onClick={cancelSubscription}>Cancelar Plano de Assinatura de Créditos de Serviço</Button>
+            </center>
+            <br />
+          </>
+        )}
       </div>
 
       <Modal

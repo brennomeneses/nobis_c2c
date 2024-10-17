@@ -20,6 +20,27 @@ const App: React.FC = () => {
       .catch(err => console.error(err));
   }, []);
 
+  const getPlanoAtual = () => {
+    if (!userData?.user?.subscriptionType) {
+      return 'Gratuito';
+    }
+    switch (userData.user.subscriptionType) {
+      case 'basic':
+        return 'Simples';
+      case 'premium':
+        return 'Ilimitado';
+      default:
+        return 'Gratuito';
+    }
+  };
+
+  useEffect(() => {
+    if (userData) {
+      const planoAtual = getPlanoAtual();
+      localStorage.setItem('planoAtual', planoAtual);
+    }
+  }, [userData]);
+
   return (
     <>
       {userData && (
@@ -32,13 +53,16 @@ const App: React.FC = () => {
               <>
                 <h2>{userData.user.fullName}</h2>
                 <h3>{userData.user.isClient === 0 ? userData.user.role : 'Cliente'}</h3>
-                <Link to={"/compra-creditos"} style={{ cursor: "pointer" }}><p style={{ fontWeight: "500" }}>Créditos de serviço: 0</p></Link>
+                <Link to={"/compra-creditos"} style={{ cursor: "pointer" }}>
+                  <p style={{ fontWeight: "500", color: 'black' }}>
+                    Créditos de serviço: {userData.tokens || 0} - Plano Atual: {getPlanoAtual()}
+                  </p>
+                </Link>
               </>
             )}
           </div>
         </div>
-      )
-      }
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Modal } from 'antd';
-import { StarFilled } from '@ant-design/icons'
+import { Card, Modal, message } from 'antd';
+import { StarFilled } from '@ant-design/icons';
 
 const App: React.FC<{ foto: string, nome: string, nota: number, serviceUUID: string, chatroomUUID: string }> = ({ foto, nome, nota, serviceUUID, chatroomUUID }) => {
   const authToken = localStorage.getItem('authToken');
@@ -34,17 +34,23 @@ const App: React.FC<{ foto: string, nome: string, nota: number, serviceUUID: str
           setIsModalOpen(false);
           if (status === 'active') {
             window.location.href = `/chat/${chatroomUUID}`;
-          }
-          else {
+          } else {
             setIsModalOpen(false);
           }
+        } else if (response.status === 406) {
+          return response.text().then(data => {
+            message.error(`Sem créditos suficientes. Por favor, compre mais créditos de serviço para aceitar esta solicitação.`);
+          });
         } else {
-          return response.json().then(data => {
-            throw new Error(data.message || 'Failed to update status');
+          return response.text().then(data => {
+            throw new Error(data || 'Falha ao atualizar o status');
           });
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        message.error('Ocorreu um erro inesperado. Tente novamente mais tarde.');
+      });
   };
 
   return (
@@ -57,7 +63,7 @@ const App: React.FC<{ foto: string, nome: string, nota: number, serviceUUID: str
             <div className='rating'><StarFilled />{nota}</div>
           </div>
 
-          <p>Cliente gostaria de <br/> solicitar um serviço.</p>
+          <p>Cliente gostaria de <br /> solicitar um serviço.</p>
           <sup style={{ backgroundColor: "rgb(210, 191, 246)", borderRadius: "5%" }}>Clique para ver mais informações.</sup>
         </center>
       </Card>
