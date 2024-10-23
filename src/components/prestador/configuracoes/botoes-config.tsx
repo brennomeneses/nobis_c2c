@@ -42,7 +42,7 @@ const App: React.FC = () => {
     }
 
     try {
-      const response = await fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/payments/0', {
+      const response = await fetch(`${baseUrl}/payments/0`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${authToken}`,

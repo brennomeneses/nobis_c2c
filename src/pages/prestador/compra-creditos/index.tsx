@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Footer from '../../../components/prestador/footer';
-import { Divider, Radio, Form, Input, Button, notification, Popover } from 'antd';
+import { Divider, Radio, Form, Input, Button, notification, Popover, InputProps, InputRef } from 'antd';
 import Header from '../../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
 import HeaderMobile from '../../../components/prestador/index/headerMobile';
 import InputMask from 'react-input-mask';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
+import { JSX } from 'react/jsx-runtime';
 
 export default function Inicio() {
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
@@ -43,7 +45,7 @@ export default function Inicio() {
       body: JSON.stringify(data),
     };
 
-    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/payments', options)
+    fetch(`${baseUrl}/payments`, options)
     .then(response => response.text())  // Usa .text() para capturar a resposta como texto plano
     .then(responseText => {
       // Aqui você trata a resposta de texto
@@ -97,7 +99,7 @@ export default function Inicio() {
 
           <Form.Item label="Número do cartão" name="card_number" rules={[{ required: true, message: 'Informe o número do cartão!' }]}>
             <InputMask mask="9999 9999 9999 9999">
-              {(inputProps) => <Input id='cardNumber' {...inputProps} />}
+              {(inputProps: JSX.IntrinsicAttributes & InputProps & React.RefAttributes<InputRef>) => <Input id='cardNumber' {...inputProps} />}
             </InputMask>
           </Form.Item>
 

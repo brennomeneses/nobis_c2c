@@ -5,6 +5,7 @@ import Header from '../../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
 import HeaderMobile from '../../../components/prestador/index/headerMobile';
 import InputMask from 'react-input-mask';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
@@ -42,7 +43,7 @@ export default function Inicio() {
       body: JSON.stringify(data),
     };
 
-    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/payments/0', options)
+    fetch(`${baseUrl}/payments/0`, options)
       .then(response => response.text())
       .then(responseText => {
         if (responseText.includes('success')) {
@@ -71,7 +72,7 @@ export default function Inicio() {
       body: JSON.stringify(data),
     };
 
-    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/payments/plan', options)
+    fetch(`${baseUrl}/payments/plan`, options)
       .then(response => response.text())
       .then(responseText => {
         if (responseText.includes('success')) {

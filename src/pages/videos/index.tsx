@@ -54,7 +54,7 @@ export default function Inicio() {
       }
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/learning/${uuid}`, options)
+    fetch(`${baseUrl}/learning/${uuid}`, options)
       .then(response => response.json())
       .then(data => {
         if (data && data.length > 0) {
