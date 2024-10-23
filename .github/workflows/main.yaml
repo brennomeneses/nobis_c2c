@@ -31,7 +31,7 @@ jobs:
           path: dist  # Make sure to match the output folder of Vite's build
 
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}   # FTP server
           username: ${{ secrets.FTP_USERNAME }} # FTP username 
