@@ -411,7 +411,7 @@ const RegistrationForm = () => {
             </Space>
           </a>
         </Dropdown>
-        <img src={notif} alt="Notificações" />
+        <a href='/notificacoes'><img src={notif} alt="Notificações" /></a>
       </div>
       <Modal
         title="Complete suas informações para virar Prestador"

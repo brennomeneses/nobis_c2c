@@ -41,6 +41,8 @@ import ListDocuments from './pages/parceiroDigital/learning/documents/list-docum
 import Cartao from './pages/cartao';
 import VideosPrestador from './pages/prestador/videos';
 import CompraCreditos from './pages/prestador/compra-creditos';
+import Notificacoes from './pages/notificacoes';
+import GerenciarAssinatura from './pages/prestador/gerenciar-assinatura';
 import VideoPlayer from './pages/videos';
 import FAQ from './pages/faq';
 import ForgotPassword from './pages/forgot-password';
@@ -79,6 +81,14 @@ const Routes: React.FC = () => {
     {
       path: "/compra-creditos",
       element: <CompraCreditos />
+    },
+    {
+      path: "/gerenciar-assinatura",
+      element: <GerenciarAssinatura />
+    },
+    {
+      path: "/notificacoes",
+      element: <Notificacoes />
     },
     {
       path: "/configuracoes",

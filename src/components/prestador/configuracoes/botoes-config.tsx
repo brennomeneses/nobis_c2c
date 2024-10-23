@@ -116,11 +116,25 @@ const App: React.FC = () => {
         <br /><br />
         <Divider />
         <br />
-        <Link to={"/compra-creditos"} style={{ color: "black" }}>
-          <DollarOutlined /> Comprar pacotes de serviço
-        </Link>
-        <br /><br />
-        <Divider />
+        {planoAtual === 'Gratuito' ? (
+          <>
+            <Link to={"/compra-creditos"} style={{ color: "black" }}>
+              <DollarOutlined /> Comprar pacotes de serviço
+            </Link>
+            <br /><br />
+            <Divider />
+          </>
+        ) : (
+          <>
+            {/* Se o usuário já assina um plano, exibir "Gerenciar minha assinatura" */}
+            <Link to={"/gerenciar-assinatura"} style={{ color: "black" }}>
+              <DollarOutlined /> Gerenciar minha assinatura
+            </Link>
+            <br /><br />
+            <Divider />
+          </>
+        )}
+        
         <br />
         <Link to={"/historico"} style={{ color: "black" }}>
           <HistoryOutlined /> Histórico de serviços prestados

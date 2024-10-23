@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Footer from '../../../components/prestador/footer';
-import { Divider, Radio, Form, Input, Button, notification } from 'antd';
+import { Divider, Radio, Form, Input, Button, notification, Popover } from 'antd';
 import Header from '../../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
 import HeaderMobile from '../../../components/prestador/index/headerMobile';
@@ -74,8 +74,8 @@ export default function Inicio() {
         >
           <Form.Item label="Plano" name="tier" rules={[{ required: true, message: 'Escolha um plano!' }]}>
             <Radio.Group>
-              <Radio.Button value="basic">Simples - R$ 15,00</Radio.Button>
-              <Radio.Button value="premium">Ilimitado - R$ 30,00</Radio.Button>
+              <Popover content="Até 30 créditos mensais"><Radio.Button value="basic">Simples - R$ 15,00</Radio.Button></Popover>
+              <Popover content="Créditos ilimitados"><Radio.Button value="premium">Ilimitado - R$ 30,00</Radio.Button></Popover>
             </Radio.Group>
           </Form.Item>
 

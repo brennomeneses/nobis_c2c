@@ -49,7 +49,7 @@ const App: React.FC = () => {
             </Space>
           </a>
         </Dropdown>
-        <img className='notif' src={notif} alt="Notificações" />
+        <Link to={'/notificacoes'}><img className='notif' src={notif} alt="Notificações" /></Link>
       </div>
     </>
   );
