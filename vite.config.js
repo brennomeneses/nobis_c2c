@@ -11,6 +11,22 @@ export default defineConfig({
       short_name: 'Nobis',
       description: 'Plataforma de impacto 4.0',
       theme_color: '#ffffff',
+      screenshots: [
+        {
+          src: "assets/screen2_mobile.png",
+          sizes: "397x874",
+          type: "image/png",
+          form_factor: "narrow",
+          label: "Primeira tela"
+        },
+        {
+          src: "assets/screen1_mobile.png",
+          sizes: "397x874",
+          type: "image/png",
+          form_factor: "narrow",
+          label: "Segunda tela"
+        }
+      ],
       icons: [
         {
           src: '/icon-192x192.png',
