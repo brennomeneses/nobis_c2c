@@ -1,5 +1,5 @@
-import { Divider, Statistic, theme } from "antd";
-import { useEffect, useState } from "react";
+import { Divider, Empty, Statistic, theme } from "antd";
+import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
 import L from 'leaflet'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
 import { Pie, Bar } from '@ant-design/plots';
@@ -16,7 +16,7 @@ const icon = (filename: string) => new L.Icon({
   className: 'map_icon'
 })
 
-const CopyLinkButton = ({ link }) => {
+const CopyLinkButton = ({ link }: { link: string }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(link).then(() => {
       message.success('Link copiado!');
@@ -34,7 +34,7 @@ const CopyLinkButton = ({ link }) => {
 
 const Infos = () => {
 
-  const [dashboard, setDashboard] = useState(null);
+  const [dashboard, setDashboard] = useState<null | any>(null);
 
   const dashboardFields = ['age', 'payments', 'totalServicesStatus', 'genre', 'deficiency', 'lookingForJob', 'nationatity', 'scholarship', 'familySize']
 
@@ -170,7 +170,19 @@ const Infos = () => {
                     ))}
                   </div>
                 </h1>
-                <Pie {...{
+                {(!dashboard[s] || Object.keys(dashboard[s]).length === 0) ? (
+                  <>
+                    <Empty
+                    style={{
+                      width: 350,
+                      height: 350,
+                    }}
+                    description={"Nenhum dado encontrado"}
+                    />
+                  </>
+                ) : (
+                  <>
+                  <Pie {...{
 
                   width: 350,
                   data: formatPayments(dashboard[s]),
@@ -190,6 +202,10 @@ const Infos = () => {
                     },
                   },
                 }} />
+                </>
+                )
+              }
+                
               </div>)
           })}
           <div style={{
@@ -199,8 +215,8 @@ const Infos = () => {
             padding: '2%',
             justifyContent: 'space-around'
           }}>
-            <Statistic title="Media de avaliação" value={((dashboard.rating.price + dashboard.rating.quality + dashboard.rating.punctuality) / 3).toFixed(1)} prefix={<StarOutlined />} />
-            <Statistic title="Media de avaliação mensal" value={((dashboard.monthRating.price + dashboard.monthRating.quality + dashboard.monthRating.punctuality) / 3).toFixed(1)} prefix={<StarFilled />} />
+            <Statistic title="Media de avaliação" value={((dashboard.rating["Preço"] + dashboard.rating["Qualidade"] + dashboard.rating["Pontualidade"]) / 3).toFixed(1)} prefix={<StarOutlined />} />
+            <Statistic title="Media de avaliação mensal" value={((dashboard.monthRating["Preço"] + dashboard.monthRating["Qualidade"] + dashboard.monthRating["Pontualidade"]) / 3).toFixed(1)} prefix={<StarFilled />} />
           </div>
           {dashboardFieldsRating.map((s, i) => {
             return (
@@ -320,7 +336,7 @@ const Infos = () => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {dashboard.users.map((usr) => (
+              {dashboard.users.map((usr: { avatar: string; location: number[]; uuid: any; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => (
                 <Marker
                   icon={icon(usr.avatar)}
                   position={[usr.location[0], usr.location[1]]}
