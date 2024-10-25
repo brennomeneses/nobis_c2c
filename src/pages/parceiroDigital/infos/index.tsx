@@ -229,7 +229,19 @@ const Infos = () => {
                   </div>
                 </h1>
 
-                <Pie {...{
+                {(!dashboard[s] || Object.keys(dashboard[s]).length === 0) ? (
+                  <>
+                    <Empty
+                    style={{
+                      width: 350,
+                      height: 350,
+                    }}
+                    description={"Nenhum dado encontrado"}
+                    />
+                  </>
+                ) : (
+                  <>
+                  <Pie {...{
                   width: 300,
                   data: formatPayments(dashboard[s]),
                   angleField: 'value',
@@ -248,6 +260,8 @@ const Infos = () => {
                     },
                   },
                 }} />
+                  </>
+                )}
               </div>)
           })}
 
@@ -271,25 +285,39 @@ const Infos = () => {
                     ))}
                   </div>
                 </h1>
-                <Pie {...{
-                  width: 350,
-                  data: formatPayments(dashboard[s]),
-                  angleField: 'value',
-                  colorField: 'type',
-                  label: {
-                    text: 'value',
-                    style: {
-                      fontWeight: 'b',
-                    },
-                  },
-                  legend: {
-                    color: {
-                      title: false,
-                      position: 'right',
-                      rowPadding: 5,
-                    },
-                  },
-                }} />
+                {(!dashboard[s] || Object.keys(dashboard[s]).length === 0) ? (
+                  <>
+                    <Empty
+                    style={{
+                      width: 350,
+                      height: 350,
+                    }}
+                    description={"Nenhum dado encontrado"}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Pie {...{
+                      width: 350,
+                      data: formatPayments(dashboard[s]),
+                      angleField: 'value',
+                      colorField: 'type',
+                      label: {
+                        text: 'value',
+                        style: {
+                          fontWeight: 'b',
+                        },
+                      },
+                      legend: {
+                        color: {
+                          title: false,
+                          position: 'right',
+                          rowPadding: 5,
+                        },
+                      },
+                    }} />
+                  </>
+                )}
               </div>)
           })}
 
