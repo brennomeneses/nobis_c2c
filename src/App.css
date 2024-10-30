@@ -347,10 +347,6 @@ a:active {
   align-items: center;
 }
 
-.avaliacao {
-  
-}
-
 .cardPrestador {
   display: flex;
   justify-content: space-between;
@@ -519,8 +515,8 @@ a:active {
   font-size: 15px;
   margin: 2% 0 2% 0;
   display: block;
-  textAlign: center;
-  marginTop: 20px;
+  text-align: center;
+  margin-top: 20px;
   color: #FFF;
   font-weight: 300;
 }
@@ -907,6 +903,13 @@ a:active {
     width: 100%;
     text-align: left;
     margin-top: 5px;
+  }
+
+  .botaoSugestao {
+    font-size: 10px;
+    margin-top: -1px;
+    margin-right: 8px;
+    margin-bottom: -4px;
   }
 }
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SendOutlined, UploadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Input, Button, Space, Form, UploadProps, message, Upload, Modal } from 'antd';
-import type { UploadFile } from 'antd';
+import { Input, Button, Space, Form, message, Upload, Modal } from 'antd';
+import type { UploadFile, UploadProps } from 'antd';
 import type { FormProps } from 'antd';
 import { socket } from '../../../socket';
 import styled from 'styled-components';
@@ -15,17 +15,26 @@ const ResponsiveInput = styled(Input)`
   }
 `;
 
-
 type FieldType = {
   msg?: string;
-  file?: any;
+  file?: UploadFile;
 };
 
-const App: React.FC<{ status: string }> = ({ status }) => {
-  const [userFile, setUserFile] = useState<any>(null);
+interface EnviarProps {
+  status: string;
+  inputValue: string;
+  setInputValue: (value: string) => void;
+}
+
+const App: React.FC<EnviarProps> = ({ status, inputValue, setInputValue }) => {
+  const [userFile, setUserFile] = useState<UploadFile | null>(null);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [messageToSend, setMessageToSend] = useState<FieldType | null>(null);
+
+  useEffect(() => {
+    form.setFieldsValue({ msg: inputValue }); // Atualiza o campo msg quando inputValue muda
+  }, [inputValue]);
 
   const url = window.location.href;
   const uuid = url.split('/chat/')[1] || url.split('/chat-servico/')[1];
@@ -43,7 +52,7 @@ const App: React.FC<{ status: string }> = ({ status }) => {
         message: messageToSend.msg,
         messageRoomUuid: uuid,
         userUuid: localStorage.getItem('userUuid'),
-        filename: userFile
+        filename: userFile,
       });
       setUserFile(null);
       form.resetFields(['msg', 'file']);
@@ -58,20 +67,16 @@ const App: React.FC<{ status: string }> = ({ status }) => {
   };
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    /*
-    Don't forget to add the custom request to upload images here, insted of 
-    make the requests when is uploaded
-    */
     const phoneRegex = /(\+?\d{1,4}[\s-]?)?(\(?\d{2,3}\)?[\s-]?)?(\d{4,5}[\s-]?\d{4})/g;
 
-    if (phoneRegex.test(values.msg)) {
+    if (phoneRegex.test(values.msg || '')) {
       showWarningModal(values);
     } else {
       socket.emit('message', {
         message: values.msg,
         messageRoomUuid: uuid,
         userUuid: localStorage.getItem('userUuid'),
-        filename: userFile
+        filename: userFile,
       });
       setUserFile(null);
       form.resetFields(['msg', 'file']);
@@ -86,32 +91,27 @@ const App: React.FC<{ status: string }> = ({ status }) => {
       authorization: 'Bearer ' + localStorage.getItem('authToken'),
     },
     onChange(info) {
-      setLoading(true)
-      if (info.file.status !== 'uploading') {
-        setUserFile(info.file.response);
+      setLoading(true);
+      if (info.file.status === 'done') {
+        setUserFile(info.file);
         setLoading(false);
-      }
-      if (info.file.status === 'error') {
-        message.error(`Erro ao anexar ${info.file.name}. Por favor tente novamente.`);
+      } else if (info.file.status === 'error') {
+        message.error(`Erro ao anexar ${info.file.name}. Por favor, tente novamente.`);
         setLoading(false);
       }
     },
     onRemove() {
       setUserFile(null);
-    }
+    },
   };
 
   return (
     <>
       {status !== 'completed' ? (
-        <div style={{ width: "100%" }}>
+        <div style={{ width: '100%' }}>
           <Space style={{ width: '100%' }}>
-            <Form
-              form={form}
-              name="basic"
-              onFinish={onFinish}
-            >
-              <div style={{ display: "flex", justifyContent: "center", padding: '2%', alignItems: 'flex-end' }}>
+            <Form form={form} name="basic" onFinish={onFinish}>
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '2%', alignItems: 'flex-end' }}>
                 <Form.Item<FieldType>
                   name="msg"
                   rules={[
@@ -127,22 +127,36 @@ const App: React.FC<{ status: string }> = ({ status }) => {
                   ]}
                 >
                   <ResponsiveInput
-                    autoComplete='off'
-                    className='chatInput'
+                    autoComplete="off"
+                    className="chatInput"
                     placeholder="Escreva uma mensagem..."
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                   />
                 </Form.Item>
-                <Form.Item<FieldType>
-                  name="file"
-                >
+                <Form.Item<FieldType> name="file">
                   <Upload {...props}>
-                    <Button className='btnPC'><UploadOutlined /> Selecionar Arquivo</Button>
-                    <Button className='btnCel'><UploadOutlined /></Button>
+                    <Button className="btnPC">
+                      <UploadOutlined /> Selecionar Arquivo
+                    </Button>
+                    <Button className="btnCel">
+                      <UploadOutlined />
+                    </Button>
                   </Upload>
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" disabled={loading} htmlType='submit' className='btnPC' style={{ backgroundColor: "#4C3779" }}>Enviar</Button>
-                  <Button type="primary" htmlType='submit' className='btnCel' style={{ backgroundColor: "#4C3779" }}><SendOutlined /></Button>
+                  <Button
+                    type="primary"
+                    disabled={loading}
+                    htmlType="submit"
+                    className="btnPC"
+                    style={{ backgroundColor: '#4C3779' }}
+                  >
+                    Enviar
+                  </Button>
+                  <Button type="primary" htmlType="submit" className="btnCel" style={{ backgroundColor: '#4C3779' }}>
+                    <SendOutlined />
+                  </Button>
                 </Form.Item>
               </div>
             </Form>
@@ -152,12 +166,18 @@ const App: React.FC<{ status: string }> = ({ status }) => {
         <>
           <br />
           Não é possível enviar mais mensagens pois este serviço já foi concluído.
-          <br /><br />
+          <br />
+          <br />
+          <br />
         </>
       )}
 
       <Modal
-        title={<span><ExclamationCircleOutlined style={{ color: 'orange', marginRight: 8 }} /> Atenção</span>}
+        title={
+          <span>
+            <ExclamationCircleOutlined style={{ color: 'orange', marginRight: 8 }} /> Atenção
+          </span>
+        }
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -166,9 +186,13 @@ const App: React.FC<{ status: string }> = ({ status }) => {
         okButtonProps={{ style: { backgroundColor: '#4C3779', borderColor: '#4C3779', color: 'white' } }}
         cancelButtonProps={{ style: { borderColor: '#4C3779', color: '#4C3779' } }}
       >
-        <p>Você está prestes a enviar uma mensagem contendo um número de telefone. Para sua segurança, orientamos que permaneça na Plataforma durante todas as etapas da negociação.
-          <br /><br />
-          Deseja prosseguir?</p>
+        <p>
+          Você está prestes a enviar uma mensagem contendo um número de telefone. Para sua segurança, orientamos que
+          permaneça na Plataforma durante todas as etapas da negociação.
+          <br />
+          <br />
+          Deseja prosseguir?
+        </p>
       </Modal>
     </>
   );

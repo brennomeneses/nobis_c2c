@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Card, Badge, Alert, Button } from 'antd';
 import Header from '../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
-import HeaderMobile from '../../components/prestador/index/headerMobile'
+import HeaderMobile from '../../components/prestador/index/headerMobile';
 import Aviso from '../../components/prestador/index/aviso';
 import Solicitados from '../../components/prestador/index/solicitacoes';
 import Clube from '../../components/prestador/index/clube';
@@ -15,12 +15,10 @@ import baseUrl from '../../components/assets/schemas/baseUrl';
 import { Link } from 'react-router-dom';
 
 export default function Inicio() {
-  const [solicitacao, setSolicitacao] = useState([]);
+  const [solicitacao, setSolicitacao] = useState([]); // Define como array vazio inicialmente
   const [videos, setVideos] = useState([]);
-
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
-
-  const userUuid = localStorage.getItem('userUuid')
+  const userUuid = localStorage.getItem('userUuid');
 
   useEffect(() => {
     getSolicitacoes();
@@ -29,7 +27,6 @@ export default function Inicio() {
 
   function getSolicitacoes() {
     const authToken = localStorage.getItem('authToken');
-
     const options = {
       method: 'GET',
       headers: {
@@ -39,13 +36,22 @@ export default function Inicio() {
 
     fetch(`${baseUrl}/services`, options)
       .then(response => response.json())
-      .then(response => setSolicitacao(response))
-      .catch(err => console.error(err));
+      .then(response => {
+        if (Array.isArray(response)) {
+          setSolicitacao(response);
+        } else {
+          console.error('Resposta inesperada para getSolicitacoes:', response);
+          setSolicitacao([]);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        setSolicitacao([]);
+      });
   }
 
   function getVideos() {
     const authToken = localStorage.getItem('authToken');
-
     const options = {
       method: 'GET',
       headers: {
@@ -69,7 +75,7 @@ export default function Inicio() {
       });
   }
 
-  const pendingServices = solicitacao.filter(s => s.status === 'pending');
+  const pendingServices = Array.isArray(solicitacao) ? solicitacao.filter(s => s.status === 'pending') : [];
 
   return (
     <>
@@ -125,14 +131,14 @@ export default function Inicio() {
 
                             @media (max-width: 768px) {
                               .videos-container {
-                                flex-direction: column; /* Empilha os cards verticalmente */
-                                align-items: center; /* Centraliza os cards no mobile */
+                                flex-direction: column;
+                                align-items: center;
                               }
 
                               .ant-card {
-                                margin: 10px 0; /* Adiciona espaçamento entre os cards */
-                                width: 100%; /* Faz o card ocupar a largura completa da tela */
-                                max-width: 300px; /* Limita a largura máxima dos cards */
+                                margin: 10px 0;
+                                width: 100%;
+                                max-width: 300px;
                               }
                             }
                           `}</style>
@@ -190,7 +196,7 @@ export default function Inicio() {
                     .map((solicitacao, index) => (
                       <Col xs={24}
                         sm={12}
-                        md={8}  key={index} style={{ marginBottom: '5%' }}>
+                        md={8} key={index} style={{ marginBottom: '5%' }}>
                         <Servicos
                           nome={solicitacao.client.fullName}
                           nota={reduceRating(solicitacao.client.clientRatings)}
@@ -203,7 +209,6 @@ export default function Inicio() {
               </Card>
             </>
           )}
-
 
           <br />
         </div>

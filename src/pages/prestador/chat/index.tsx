@@ -4,6 +4,7 @@ import Header from '../../../components/prestador/chat/header';
 import Aviso from '../../../components/prestador/chat/aviso';
 import Finalizar from '../../../components/prestador/chat/finalizar';
 import Enviar from '../../../components/cliente/chat/enviarMsg';
+import Sugestoes from '../../../components/prestador/chat/sugestoes'
 import Footer from '../../../components/prestador/footer';
 import { socket } from '../../../socket';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -61,7 +62,13 @@ const EnviarContainer = styled.div`
   background-color: #fff;
   padding: 0 0 50px 0;
   margin: 0 auto;
+  margin-bottom: 30px;
   border-top: 1px solid #ddd;
+
+  @media (max-width: 768px) {
+    padding: 0 0 30px 0; // Diminui o padding em telas menores
+    margin-bottom: 20px;  // Ajusta a margem inferior
+  }
 `;
 
 export default function Inicio() {
@@ -70,6 +77,7 @@ export default function Inicio() {
   const [serviceUUID, setserviceUUID] = useState([]);
   const [finalizarVisible, setFinalizarVisible] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [inputValue, setInputValue] = useState("");
 
   const url = window.location.href;
   const uuid = url.split('/chat/')[1];
@@ -85,7 +93,6 @@ export default function Inicio() {
   }, [msg]);
 
   function handleResponse(response) {
-    console.log('Response from server:', response);
     setMessages(response);
   }
 
@@ -110,7 +117,6 @@ export default function Inicio() {
           prestadorName: data.user[0]?.fullName
         };
         setUserData(userData);
-        console.log(userData);
       })
       .catch(err => console.error(err));
 
@@ -192,14 +198,15 @@ export default function Inicio() {
             ))}
             <div ref={messagesEndRef} />
           </ChatContainer>
+          {userData && userData.status !== "completed" && <Sugestoes onSuggestionClick={setInputValue} />}
           <EnviarContainer>
-            {userData && <Enviar status={userData.status} />}
+            {userData && <Enviar inputValue={inputValue} setInputValue={setInputValue} status={userData.status} />}
           </EnviarContainer>
         </>
       ) : (
         <Finalizar cancelar={cancelar} confirmar={preencherInfo} />
       )}
-      <br /><br /><br /><br />
+      
     </Container>
     <FixedFooter />
   </>
