@@ -131,7 +131,7 @@ const RegistrationForm = () => {
     };
 
     fetch(`${baseUrl}/users`, options)
-      .then(response => response.text())
+      .then(response => response.json())
       .then(response => {
         window.location.href = '/login'
         console.log(response)
