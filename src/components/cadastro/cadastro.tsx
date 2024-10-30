@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import InputMask from 'react-input-mask';
-import { Form, Input, Button, Radio, Select, Checkbox, Upload, InputNumber, Alert, Popover, message } from 'antd';
+import { Form, Input, Button, Radio, Select, Checkbox, Upload, InputNumber, Alert, Popover, message, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { validateCNPJ, validateCPF, validateBirthDate, validateMobileNumber } from '../assets/schemas/validateDocuments';
 import { Link } from 'react-router-dom';
 import { countries, deficiencias, escolaridade, familias, profissoes, racas } from '../assets/schemas/signUpSchemas';
+import baseUrl from '../assets/schemas/baseUrl';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -13,6 +14,8 @@ const { Option } = Select;
 const RegistrationForm = () => {
   const url = window.location.href;
   const pdCode = url.split('/cadastro/')[1];
+
+  const [api, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm();
   const [serviceType, setServiceType] = useState('request');
@@ -127,15 +130,18 @@ const RegistrationForm = () => {
       body: formData,
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users', options)
+    fetch(`${baseUrl}/users`, options)
       .then(response => response.text())
-
       .then(response => {
         window.location.href = '/login'
         console.log(response)
       })
       .catch(err => {
-        alert("Algo deu errado, revise os campos e tente novamente")
+        notification.error({
+          message: 'Erro ao cadastrar',
+          description: 'Algo deu errado, revise os campos e tente novamente',
+          duration: 5, // Define quanto tempo a notificação fica na tela (em segundos)
+        });
         console.error(err)
       });
   };
@@ -194,6 +200,7 @@ const RegistrationForm = () => {
         budgetValue: '',
       }}
     >
+      {contextHolder}
       {pdCode ? (
         <>
         </>
