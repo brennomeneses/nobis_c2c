@@ -80,8 +80,7 @@ const RegistrationForm = () => {
     console.log(values)
   }
 
-  const handleSubmit = values => { 
-    debugger;
+  const handleSubmit = (values: any) => { 
     console.log(values)
     const formData = new FormData();
     formData.append('fullName', values.name);
@@ -464,6 +463,7 @@ const RegistrationForm = () => {
             />
           </Form.Item>
 
+            {/*}
           <Form.Item name="uploadPortfolio" label="Upload do Portfólio">
             <Upload
               beforeUpload={(file) => false}
@@ -472,7 +472,7 @@ const RegistrationForm = () => {
               <Button icon={<UploadOutlined />}>Selecionar arquivos</Button>
             </Upload>
           </Form.Item>
-
+            {*/}
           {/* badges -> false por padrão, true se o checkbox for marcado */}
           <Form.Item name="badges" valuePropName="checked" label={
             <div style={{ display: "flex", alignItems: "center" }}>
