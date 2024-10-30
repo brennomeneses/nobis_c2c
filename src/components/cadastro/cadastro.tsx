@@ -77,7 +77,8 @@ const RegistrationForm = () => {
     console.log(values)
   }
 
-  const handleSubmit = values => {
+  const handleSubmit = values => { 
+    debugger;
     console.log(values)
     const formData = new FormData();
     formData.append('fullName', values.name);
