@@ -6,16 +6,15 @@ import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 
 type FieldType = {
-  projects?: string[];
-  users?: string[];
-  subject?: string;
-  message?: string;
+  proj_name?: string;
+  proj_duration?: string;
+  proj_desc?: string;
   files?: any;
 };
 
 const { TextArea } = Input;
 
-const Mensageria = () => {
+const CriarProjeto = () => {
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -115,7 +114,7 @@ const Mensageria = () => {
             margin: '8vh 0 20vh 0'
           }}
         >
-          <h1>Mensageria</h1>
+          <h1>Criar Novo Projeto</h1>
 
           <Form
             onFinish={onFinish}
@@ -123,63 +122,31 @@ const Mensageria = () => {
             layout="vertical"
           >
             <Form.Item<FieldType>
-              label="Projetos"
-              name="projects"
-              rules={[{ required: true, message: 'Selecione ao menos um projeto' }]}
+              label="Nome"
+              name="proj_name"
+              rules={[{ required: true, message: 'Insira o nome do projeto' }]}
             >
-              <Select
-                allowClear
-                mode="multiple"
-                notFoundContent="Você não possui nenhum projeto cadastrado"
-                style={{ width: '85%' }}
-                placeholder="Selecione os projetos"
-                value={selectedUsers}
-                options={options}
-                onChange={(value) => {
-                  setSelectedUsers(value);
-                  form.setFieldsValue({ users: value });
-                }}
-              />
-              <Button style={{ width: '15%' }} onClick={() => handleSelectAll()}>Selecionar todos</Button>
-            </Form.Item>
-            <Form.Item<FieldType>
-              label="Prestadores"
-              name="users"
-              rules={[{ required: true, message: 'Selecione ao menos um prestador' }]}
-            >
-              <Select
-                allowClear
-                mode="multiple"
-                notFoundContent="Você não possui nenhum prestador cadastrado"
-                style={{ width: '85%' }}
-                placeholder="Selecione os prestadores"
-                value={selectedUsers}
-                options={options}
-                onChange={(value) => {
-                  setSelectedUsers(value); // Update state when user selects manually
-                  form.setFieldsValue({ users: value }); // Update form field with selected users
-                }}
-              />
-              <Button style={{ width: '15%' }} onClick={() => handleSelectAll()}>Selecionar todos</Button>
-            </Form.Item>
-            <Form.Item<FieldType>
-              label="Assunto"
-              name="subject"
-              rules={[{ required: true, message: 'Insira o assunto da mensagem' }]}
-            >
-              <Input />
+              <Input placeholder="Nome do Projeto" />
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Mensagem"
-              name="message"
-              rules={[{ required: true, message: 'Insira o conteúdo da mensagem' }]}
+              label="Duração"
+              name="proj_duration"
+              rules={[{ required: true, message: 'Insira a duração do projeto' }]}
             >
-              <TextArea rows={4} />
+              <Input placeholder="Ex.: 2 meses, 3 meses, etc." />
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Anexar arquivos"
+              label="Descrição"
+              name="proj_desc"
+              rules={[{ required: true, message: 'Insira uma descrição do projeto' }]}
+            >
+              <TextArea rows={4} placeholder="Descrição do Projeto" />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label="Imagem de Capa do Projeto"
               name="files"
             >
               <Upload maxCount={10} multiple beforeUpload={() => false}>
@@ -187,9 +154,10 @@ const Mensageria = () => {
               </Upload>
             </Form.Item>
 
+            <br/>
             <Form.Item>
               <Button loading={loading} type="primary" htmlType="submit">
-                Enviar mensagem
+                Criar Projeto
               </Button>
             </Form.Item>
           </Form>
@@ -199,4 +167,4 @@ const Mensageria = () => {
   )
 }
 
-export default Mensageria;
+export default CriarProjeto;

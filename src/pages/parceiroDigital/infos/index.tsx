@@ -5,10 +5,12 @@ import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
 import { Pie, Bar } from '@ant-design/plots';
 import { BarChartOutlined, CalendarOutlined, CarryOutOutlined, LikeOutlined, ShopFilled, ShopOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Button, message, Card } from 'antd';
+import { Button, message, Card, Select } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { Line } from "@ant-design/charts";
 import ODS from "../../../components/parceiroDigital/ods";
+
+const { Option } = Select;
 
 const icon = (filename: string) => new L.Icon({
   iconUrl: `https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${filename}`,
@@ -126,6 +128,15 @@ const Infos = () => {
   };
 
   return (
+    <>
+    <div style={{ padding: '16px 48px', backgroundColor: '#fafafa' }}>
+          <Select
+            placeholder="Selecione um projeto"
+            style={{ width: '100%' }}
+          >
+            <Option>Teste</Option>
+          </Select>
+        </div>
     <div
       style={{
         padding: 24,
@@ -380,6 +391,7 @@ const Infos = () => {
       )}
 
     </div>
+    </>
   )
 }
 

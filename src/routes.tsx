@@ -28,6 +28,7 @@ import Dashboard from './pages/parceiroDigital/dashboard';
 import Infos from './pages/parceiroDigital/infos';
 import Mensageria from './pages/parceiroDigital/mensagens';
 import LogOut from './pages/parceiroDigital/logout';
+import CriarProjeto from './pages/parceiroDigital/criar-projeto';
 import useAuthDigitalPartner from './hooks/useAuthDigitalPartner';
 import Videos from './pages/parceiroDigital/learning/video';
 import NovoVideo from './pages/parceiroDigital/learning/video/novo-video/novo-video';
@@ -194,6 +195,10 @@ const Routes: React.FC = () => {
         {
           path: "mensageria",
           element: <Mensageria />
+        },
+        {
+          path: "criar-projeto",
+          element: <CriarProjeto />
         },
         {
           path: "logout",
