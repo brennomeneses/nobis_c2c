@@ -99,6 +99,7 @@ export default function Inicio() {
           oficialDev={dadosPrestador.oficialDev}
         />
         <br />
+        
         <h3>Informações do Serviço</h3>
         <Servico
           orcamento={dadosPrestador.budget}
@@ -107,6 +108,12 @@ export default function Inicio() {
           deficiencia={dadosPrestador.deficiency}
           opRad={dadosPrestador.operationRadius}
         />
+        {dadosPrestador.portfolioUrl ? (
+          <>
+            <h3>Portifólio de serviços e produtos:</h3>
+            <a href={dadosPrestador.portfolioUrl}>{dadosPrestador.portfolioUrl}</a>
+          </>
+        ) : (<></>)}
         <br />
         {dadosPrestador.digitalPartners && dadosPrestador.digitalPartners.length > 0 && (
           <>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import InputMask from 'react-input-mask';
-import { Form, Input, Button, Radio, Select, Checkbox, Upload, InputNumber, Alert, Popover, message, notification } from 'antd';
+import { Form, Input, Button, Radio, Select, Checkbox, Upload, InputNumber, message, notification, Popover, Alert, RadioChangeEvent } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { validateCNPJ, validateCPF, validateBirthDate, validateMobileNumber } from '../assets/schemas/validateDocuments';
+import { validateCNPJ, validateCPF } from '../assets/schemas/validateDocuments';
 import { Link } from 'react-router-dom';
 import { countries, deficiencias, escolaridade, familias, profissoes, racas } from '../assets/schemas/signUpSchemas';
 import baseUrl from '../assets/schemas/baseUrl';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -20,68 +21,44 @@ const RegistrationForm = () => {
   const [form] = Form.useForm();
   const [serviceType, setServiceType] = useState('request');
   const [hasDisability, setHasDisability] = useState(false);
-  const [pfp, setPfp] = useState(null);
-  const [uploadPortfolioList, setUploadPortfolioList] = useState([]);
+  const [pfp, setPfp] = useState<File | null>(null);
+  const [uploadPortfolioList, setUploadPortfolioList] = useState<any[]>([]);
   const [checked, setChecked] = useState(false);
   const [budgetDisabled, setBudgetDisabled] = useState(false);
   const [birthdate, setBirthdate] = useState('');
-  const [valorCobrado, setValorCobrado] = useState<string>('');
+  const [valorCobrado, setValorCobrado] = useState('');
   const [isProvider, setIsProvider] = useState(false);
 
   useEffect(() => {
     if (pdCode) {
       setIsProvider(true);
       setServiceType('provide');
-      form.setFieldsValue({ serviceType: 'request' });
+      form.setFieldsValue({ serviceType: 'provide' });
     }
-  }, [pdCode]);
+  }, [pdCode, form]);
 
   const formatCurrency = (value: string) => {
     let numericValue = value.replace(/[^\d]/g, '');
     let numberValue = parseFloat(numericValue) / 100;
-
-    if (isNaN(numberValue)) {
-      return 'R$ 0,00';
-    }
-
-    return `${numberValue.toFixed(2).replace('.', ',')}`;
+    return isNaN(numberValue) ? 'R$ 0,00' : `R$ ${numberValue.toFixed(2).replace('.', ',')}`;
   };
 
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    const formattedValue = formatCurrency(value);
+    const formattedValue = formatCurrency(event.target.value);
     setValorCobrado(formattedValue);
     form.setFieldsValue({ valorCobrado: formattedValue });
   };
 
-  const handleDateChange = (e) => {
-    const value = e.target.value;
-    const formattedDate = moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedDate = moment(e.target.value, 'DD/MM/YYYY').format('YYYY-MM-DD');
     setBirthdate(formattedDate);
   };
+  
+  const onServiceTypeChange = (e: RadioChangeEvent) => setServiceType(e.target.value);
+  const onDisabilityChange = (e: RadioChangeEvent) => setHasDisability(e.target.value === 'yes');
+  const handleCheckboxChange = (e: CheckboxChangeEvent) => setChecked(e.target.checked);
 
-  const onServiceTypeChange = e => {
-    setServiceType(e.target.value);
-  };
-
-  const onDisabilityChange = e => {
-    setHasDisability(e.target.value === 'yes');
-  };
-
-  const handleCheckboxChange = e => {
-    const isChecked = e.target.checked;
-    setChecked(isChecked);
-    setBudgetDisabled(isChecked);
-  };
-
-
-
-  const handleSubmitTest = (values) => {
-    console.log(values)
-  }
-
-  const handleSubmit = (values: any) => { 
-    console.log(values)
+  const handleSubmit = async (values: any) => {
     const formData = new FormData();
     formData.append('fullName', values.name);
     formData.append('email', values.email);
@@ -93,17 +70,16 @@ const RegistrationForm = () => {
     formData.append('phone', values.mobile);
     formData.append('avatar', pfp || '');
     formData.append('genre', values.gender);
-    formData.append('birthCity', "null");
-    formData.append('birthContry', serviceType === 'request' ? '' : values.birthCountry || ''); // Define um valor padrão vazio
+    formData.append('birthCity', 'null');
+    formData.append('birthCountry', serviceType === 'provide' ? values.birthCountry : '');
     formData.append('birthState', 'null');
-    formData.append('operationRadius', serviceType === 'request' ? '' : values.serviceRadius || ''); // Define um valor padrão vazio
-
+    formData.append('operationRadius', serviceType === 'provide' ? values.serviceRadius : '');
     if (values.uploadPortfolio) {
-      values.uploadPortfolio.fileList.forEach(file => {
-        console.log(file)
+      values.uploadPortfolio.fileList.forEach((file: any) => {
         formData.append('documents', file.originFileObj);
       });
     }
+    formData.append('portfolioUrl', values.portfolio);
     formData.append('isClient', serviceType === 'request' ? 'true' : 'false');
     formData.append('country', values.country);
     formData.append('state', values.estado);
@@ -111,79 +87,59 @@ const RegistrationForm = () => {
     formData.append('cep', values.cep);
     formData.append('address', values.rua);
     formData.append('number', values.numero);
-    formData.append('digitalPartnerCode', pdCode ? pdCode : '');
+    formData.append('digitalPartnerCode', pdCode || '');
     formData.append('complement', values.complemento);
     formData.append('isLookingForJob', values.isLookingForJob ? 'false' : 'true');
-    formData.append('clubUuid', 'null');
-    formData.append('role', serviceType === 'request' ? '' : values.services || '');
-    formData.append('badges', values.badge ? 'false' : 'true');
-    formData.append('badgesIncluded', values ?? values.badges.join(","))
-    formData.append('payments', serviceType === 'request' ? '' : (values.paymentTypes ? values.paymentTypes.join(', ') : ''));
+    formData.append('role', serviceType === 'provide' ? values.services : '');
+    formData.append('badgesIncluded', values.badges ? values.badges.join(",") : '');
+    formData.append('payments', serviceType === 'provide' && values.paymentTypes ? values.paymentTypes.join(', ') : '');
     formData.append('birthdate', values.birthdate ? moment(values.birthdate, 'DD/MM/YYYY').format('YYYY-MM-DD') : 'null');
     formData.append('remoteWork', values.remoteWork ? 'false' : 'true');
     formData.append('families', values.families);
     formData.append('scholarship', values.scholarship);
 
-    const options = {
-      method: 'POST',
-      body: formData,
-    };
-
-    fetch(`${baseUrl}/users`, options)
-      .then(response => response.json())
-      .then(response => {
-        window.location.href = '/login'
-        console.log(response)
-      })
-      .catch(err => {
-        notification.error({
-          message: 'Erro ao cadastrar',
-          description: 'Algo deu errado, revise os campos e tente novamente',
-          duration: 5, // Define quanto tempo a notificação fica na tela (em segundos)
-        });
-        console.error(err)
+    try {
+      const response = await fetch(`${baseUrl}/users`, { method: 'POST', body: formData });
+      if (response.ok) {
+        window.location.href = '/login';
+      } else {
+        throw new Error('Failed to register');
+      }
+    } catch (err) {
+      notification.error({
+        message: 'Erro ao cadastrar',
+        description: 'Algo deu errado, revise os campos e tente novamente',
+        duration: 5,
       });
+      console.error(err);
+    }
   };
 
-  const handleAvatarUpload = ({ file }) => {
-    setPfp(file);
-  };
-
-  const handlePortfolioUpload = ({ fileList }) => {
-    setUploadPortfolioList(fileList);
-  };
+  const handleAvatarUpload = ({ file }: any) => setPfp(file);
 
   const fetchAddress = async (cep: string) => {
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       const data = await response.json();
-
       if (data.erro) {
         message.error('CEP não encontrado!');
-        return;
+      } else {
+        form.setFieldsValue({
+          rua: data.logradouro,
+          complemento: data.complemento,
+          cidade: data.localidade,
+          estado: data.uf,
+        });
       }
-
-      // Fill the form with the address response
-      form.setFieldsValue({
-        rua: data.logradouro,
-        complemento: data.complemento,
-        cidade: data.localidade,
-        estado: data.uf
-        // You can set 'numero' and others as needed
-      });
-    } catch (error) {
+    } catch {
       message.error('Erro ao buscar o CEP!');
     }
   };
 
-
   const handleCepBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const cep = e.target.value.replace(/\D/g, ''); // Removing non-numeric characters
-    if (cep.length === 8) { // Brazilian CEP has 8 digits
-      fetchAddress(cep);
-    } else {
-      message.error('CEP inválido!');
-    }
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length === 8) fetchAddress(cep);
+    else message.error('CEP inválido!');
   };
 
   return (
@@ -202,19 +158,19 @@ const RegistrationForm = () => {
       {contextHolder}
       {pdCode ? (
         <>
+          {/* Elements for registered providers */}
         </>
       ) : (
         <>
-          {/* isClient */}
           <Form.Item name="serviceType" label="Tipo de Serviço">
             <Radio.Group onChange={onServiceTypeChange}>
-              <Radio value={'request'}>Quero solicitar serviços</Radio>
-              <Radio value={'provide'}>Quero prestar serviços</Radio>
+              <Radio value="request">Quero solicitar serviços</Radio>
+              <Radio value="provide">Quero prestar serviços</Radio>
             </Radio.Group>
           </Form.Item>
         </>
       )}
-
+      
       {/* fullName */}
       <Form.Item
         name="name"
@@ -232,6 +188,7 @@ const RegistrationForm = () => {
           maxCount={1}
           beforeUpload={(file) => false}
           onChange={handleAvatarUpload}
+          accept="image/*"
         >
           <Button icon={<UploadOutlined />}>Selecionar imagem</Button>
         </Upload>
@@ -283,7 +240,7 @@ const RegistrationForm = () => {
           placeholder="DD/MM/AAAA"
           value={moment(birthdate, 'YYYY-MM-DD').format('DD/MM/YYYY')}
           onChange={handleDateChange}
-        >
+        > 
           {(inputProps: any) => <Input {...inputProps} style={{ width: 400 }} />}
         </InputMask>
       </Form.Item>
@@ -454,7 +411,7 @@ const RegistrationForm = () => {
                   Não cobro para realizar orçamento
                 </Checkbox>
               }
-              disabled={budgetDisabled}
+              disabled={checked}
               type="text"
               placeholder="0,00"
               prefix="R$"
@@ -463,7 +420,12 @@ const RegistrationForm = () => {
             />
           </Form.Item>
 
-            {/*}
+          <Form.Item name="portfolio" label="Link do seu portfólio de serviços ou produtos">
+            <Input />
+          </Form.Item>
+
+          {/*}
+
           <Form.Item name="uploadPortfolio" label="Upload do Portfólio">
             <Upload
               beforeUpload={(file) => false}
@@ -473,6 +435,7 @@ const RegistrationForm = () => {
             </Upload>
           </Form.Item>
             {*/}
+          
           {/* badges -> false por padrão, true se o checkbox for marcado */}
           <Form.Item name="badges" valuePropName="checked" label={
             <div style={{ display: "flex", alignItems: "center" }}>
