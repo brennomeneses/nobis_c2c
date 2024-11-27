@@ -113,7 +113,7 @@ const Mensageria = () => {
 
     try {
       const response = await fetch(
-        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/project/${projectIDMsg}/messages`,
+        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectIDMsg}/messages`,
         options
       );
       const data = await response.json();
