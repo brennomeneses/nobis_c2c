@@ -75,7 +75,6 @@ const Infos = () => {
       setSelectedProjectUuid(projects[0].uuid); // Use "id" ou "uuid" conforme o backend espera
     }
   }, [projects, selectedProjectUuid]);
-  
 
   useEffect(() => {
     const fetchProjects = () => {
@@ -83,7 +82,7 @@ const Infos = () => {
         method: 'GET',
         headers: {
           'User-Agent': 'insomnia/10.1.1',
-          Authorization: 'Bearer oat_NDUz.aEhMWjY4Szg4bTNCR1lsZ2pLWjQ4b1RzaGxyYWg5RDduMlBHVUZhXzQxOTI1OTcyMzI',
+          Authorization: `Bearer ${token}`,
         },
       };
 
