@@ -118,13 +118,13 @@ const CriarProjeto = () => {
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Duração"
+              label="Duração (em meses)"
               name="proj_duration"
               rules={[
                 { required: true, message: "Insira a duração do projeto" },
               ]}
             >
-              <Input placeholder="Ex.: 2 meses, 3 meses, etc." />
+              <Input placeholder="Ex.: 2, 3, etc." />
             </Form.Item>
 
             <Form.Item<FieldType>

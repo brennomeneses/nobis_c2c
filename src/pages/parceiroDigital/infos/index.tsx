@@ -201,12 +201,28 @@ const Infos = () => {
         />
       ) : dashboard ? (
         <>
-          <Card>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <p style={{ fontSize: "15px" }}><b>Cadastro de afiliado:</b> <Link className="digitalPartnerLink" to={`/cadastro/${dashboard.project.code}`} target="_blank" rel="noopener noreferrer">https://plataforma.nobisapp.com.br/cadastro/{dashboard.project.code}</Link></p>
-              <CopyLinkButton link={`https://plataforma.nobisapp.com.br/cadastro/${dashboard.project.code}`} />
-            </div>
-          </Card>
+          {dashboard?.project?.code ? (
+            <Card>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <p style={{ fontSize: "15px" }}>
+                  <b>Cadastro de afiliado:</b>
+                  <Link
+                    className="digitalPartnerLink"
+                    to={`/cadastro/${dashboard.project.code}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    https://plataforma.nobisapp.com.br/cadastro/{dashboard.project.code}
+                  </Link>
+                </p>
+                <CopyLinkButton
+                  link={`https://plataforma.nobisapp.com.br/cadastro/${dashboard.project.code}`}
+                />
+              </div>
+            </Card>
+          ) : (
+            <Empty description="Dados do projeto não encontrados." />
+          )}
           <div style={{
             width: '100%',
             display: 'flex',
