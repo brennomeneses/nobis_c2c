@@ -118,6 +118,7 @@ export default function Comunicados() {
                 <React.Fragment key={index}>
                   <a
                     href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}/${file.originalFilename}`}
+                    target='_blank'
                   >
                     {file.originalFilename}
                   </a>
