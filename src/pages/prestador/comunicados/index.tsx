@@ -1,27 +1,27 @@
 import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse, theme } from 'antd';
+import { Collapse, theme, Select, Typography } from 'antd';
 import type { CollapseProps } from 'antd';
 import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
-import baseUrl from '../../../components/assets/schemas/baseUrl';
 import Footer from '../../../components/prestador/footer';
 import Header from '../../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
-import HeaderMobile from '../../../components/prestador/index/headerMobile'
-import { Typography } from 'antd';
+import HeaderMobile from '../../../components/prestador/index/headerMobile';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 const BodyContainer = styled.div`
   padding: 24px;
-`
+`;
 
 export default function Comunicados() {
-  const userToken = localStorage.getItem('authToken');
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState([]);
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [projects, setProjects] = React.useState([]);
+  const [selectedProject, setSelectedProject] = React.useState('all');
 
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
-
   const { token } = theme.useToken();
 
   const panelStyle: React.CSSProperties = {
@@ -32,83 +32,137 @@ export default function Comunicados() {
   };
 
   React.useEffect(() => {
-
     const options = {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${userToken}`
-      }
+        'User-Agent': 'insomnia/10.1.1',
+        Authorization:
+          'Bearer oat_NDU2.UGpEMTdjWXplWS1xZUliN3hOR2J0S09RNkpiZ2JkZkp3UkpHdWtlYzI0MjQzNDU4Nzk',
+      },
     };
 
-    fetch(`${baseUrl}/digital_partners/messages/broadcast`, options)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        if (response.status === 404)
-          setData(404)
-        throw new Error('Something went wrong');
+    fetch(
+      'https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/users/project/messages',
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        setData(response);
+        setFilteredData(response);
+
+        // Extrair nomes de projetos únicos para o filtro
+        const uniqueProjects = [
+          ...new Set(response.map((msg) => msg.project?.title || 'Projeto não especificado')),
+        ];
+        setProjects(uniqueProjects);
       })
-      .then(response => setData(response))
-      .catch(err => console.log(err.status));
+      .catch((err) => console.error(err));
   }, []);
 
+  const handleFilterChange = (value) => {
+    setSelectedProject(value);
+    if (value === 'all') {
+      setFilteredData(data);
+    } else {
+      setFilteredData(data.filter((msg) => (msg.project?.title || 'Projeto não especificado') === value));
+    }
+  };
 
+  const linkify = (text: string | undefined) => {
+    if (!text || typeof text !== 'string') {
+      return null;
+    }
 
-  const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = (panelStyle) => data.map((msg, i) => {
-    const linkify = (text: string) => {
-      // This pattern matches URLs with common TLDs
-      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]|\b[-A-Z0-9+&@#\/%?=~_|!:,.;]+[.][a-z]{2,}\b)/gi;
-      return text.split(urlPattern).map((part, index) =>
-        urlPattern.test(part)
-          ? <a key={index} href={part.startsWith('http') ? part : 'http://' + part} target="_blank" rel="noopener noreferrer">{part}</a>
-          : part
-      );
-    };
+    const urlPattern =
+      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]|\b[-A-Z0-9+&@#\/%?=~_|!:,.;]+[.][a-z]{2,}\b)/gi;
 
-    return {
-      key: i,
-      label: <>
-        <b>{msg.subject}</b> - {new Date(msg.createdAt).toDateString()}
-      </>,
-      children:
-        <p>
-          {linkify(msg.content)}
-          <p><b> Parceiro Digital: {msg.digitalPartner.orgName}</b></p>
-          <p>
-            {(msg.files.length > 0) && (<b>Anexos:<br /></b>)}
-            {msg.files.map((file) => <>
-              <a
-                href={`${baseUrl}/download/${file.filename}/${file.originalFilename}`}
-              >{file.originalFilename}</a><br />
-            </>)}
-          </p>
-        </p>,
-      style: panelStyle,
-    };
-  });
+    return text.split(urlPattern).map((part, index) =>
+      urlPattern.test(part) ? (
+        <a
+          key={index}
+          href={part.startsWith('http') ? part : 'http://' + part}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {part}
+        </a>
+      ) : (
+        part
+      )
+    );
+  };
 
+  const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = (panelStyle) =>
+    filteredData.map((msg, i) => {
+      const content = msg.message || 'Conteúdo não disponível';
+      const projectName = msg.project?.title || 'Projeto não especificado';
 
+      return {
+        key: i,
+        label: (
+          <>
+            <b>{msg.title}</b> - {new Date(msg.createdAt).toLocaleDateString('pt-BR')}
+          </>
+        ),
+        children: (
+          <>
+            <p>{linkify(content)}</p>
+            <p>
+              <b>Projeto: {projectName}</b>
+            </p>
+            <p>
+              {msg.files && msg.files.length > 0 && <b>Anexos:<br /></b>}
+              {msg.files?.map((file, index) => (
+                <React.Fragment key={index}>
+                  <a
+                    href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}/${file.originalFilename}`}
+                  >
+                    {file.originalFilename}
+                  </a>
+                  <br />
+                </React.Fragment>
+              ))}
+            </p>
+          </>
+        ),
+        style: panelStyle,
+      };
+    });
 
   return (
     <>
       {isMobile ? <HeaderMobile /> : <Header />}
       <BodyContainer>
-        <div className='container'>
-          <h1 className='title'>Mensagens do parceiro digital</h1>
-          {data && (data === 404 ? (<>Você não é afiliado a nenhum parceiro digital</>) :
-            Array.isArray(data) && data.length === 0 ? (<>Você não possui nenhuma mensagem</>) : (
-              <Collapse
-                bordered={false}
-                defaultActiveKey={[0]}
-                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                style={{ background: token.colorBgContainer }}
-                items={getItems(panelStyle)}
-              />
-            )
-
-          )
-          }
+        <div className="container">
+          <Title level={2}>Mensagens do parceiro digital</Title>
+          <div style={{ marginBottom: 16 }}>
+            <Select
+              value={selectedProject}
+              onChange={handleFilterChange}
+              style={{ width: 300 }}
+              placeholder="Filtrar por projeto"
+            >
+              <Option value="all">Todos os projetos</Option>
+              {projects.map((project, index) => (
+                <Option key={index} value={project}>
+                  {project}
+                </Option>
+              ))}
+            </Select>
+          </div>
+          {filteredData && filteredData.length > 0 ? (
+            <Collapse
+              bordered={false}
+              defaultActiveKey={[0]}
+              expandIcon={({ isActive }) => (
+                <CaretRightOutlined rotate={isActive ? 90 : 0} />
+              )}
+              style={{ background: token.colorBgContainer }}
+              items={getItems(panelStyle)}
+            />
+          ) : (
+            <p>Nenhuma mensagem encontrada no momento.</p>
+          )}
         </div>
       </BodyContainer>
       <Footer />

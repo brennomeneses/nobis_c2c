@@ -5,10 +5,12 @@ import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
 import { Pie, Bar } from '@ant-design/plots';
 import { BarChartOutlined, CalendarOutlined, CarryOutOutlined, LikeOutlined, ShopFilled, ShopOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Button, message, Card } from 'antd';
+import { Button, message, Card, Select } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { Line } from "@ant-design/charts";
 import ODS from "../../../components/parceiroDigital/ods";
+
+const { Option } = Select;
 
 const icon = (filename: string) => new L.Icon({
   iconUrl: `https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${filename}`,
@@ -33,8 +35,9 @@ const CopyLinkButton = ({ link }: { link: string }) => {
 };
 
 const Infos = () => {
-
   const [dashboard, setDashboard] = useState<null | any>(null);
+  const [projects, setProjects] = useState([]); // Estado para armazenar os projetos
+  const [selectedProjectUuid, setSelectedProjectUuid] = useState(null); // Estado para armazenar o uuid do projeto selecionado
 
   const dashboardFields = ['age', 'payments', 'totalServicesStatus', 'genre', 'deficiency', 'lookingForJob', 'nationatity', 'scholarship', 'familySize']
 
@@ -64,23 +67,54 @@ const Infos = () => {
     { name: 'Formalização por Mês', ods: [8, 9, 10, 11] }
   ]
 
-  const token = localStorage.getItem('digitalPartnerToken')
+  const token = localStorage.getItem('digitalPartnerToken');
+
   useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`
+    // Atualiza o projeto selecionado com o primeiro projeto ao carregar
+    if (projects.length > 0 && !selectedProjectUuid) {
+      setSelectedProjectUuid(projects[0].uuid); // Use "id" ou "uuid" conforme o backend espera
+    }
+  }, [projects, selectedProjectUuid]);
+  
+
+  useEffect(() => {
+    const fetchProjects = () => {
+      const options = {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'insomnia/10.1.1',
+          Authorization: 'Bearer oat_NDUz.aEhMWjY4Szg4bTNCR1lsZ2pLWjQ4b1RzaGxyYWg5RDduMlBHVUZhXzQxOTI1OTcyMzI',
+        },
+      };
+
+      fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+        .then(response => response.json())
+        .then(response => setProjects(response)) // Armazena os projetos
+        .catch(err => console.error(err));
+    };
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    const fetchDashboard = (projectUuid) => {
+      if (projectUuid) {
+        const options = {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        fetch(`https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectUuid}/edit`, options)
+          .then(response => response.json())
+          .then(response => {setDashboard(response); console.log(response)}) // Atualiza os dados do dashboard
+          .catch(err => console.error(err));
       }
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/digital_partners/create', options)
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        setDashboard(response)
-      })
-      .catch(err => console.error(err));
-  }, [])
+    fetchDashboard(selectedProjectUuid); // Dispara a requisição ao selecionar o projeto
+  }, [selectedProjectUuid, token]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -126,6 +160,21 @@ const Infos = () => {
   };
 
   return (
+    <>
+    <div style={{ padding: '16px 48px', backgroundColor: '#fafafa' }}>
+    <Select
+      placeholder="Selecione um projeto"
+      style={{ width: '100%' }}
+      value={selectedProjectUuid} // Define o valor atual selecionado
+      onChange={(value) => setSelectedProjectUuid(value)} // Atualiza o estado quando o usuário seleciona
+    >
+      {projects.map((project: { id: number; title: string; uuid: string }) => (
+        <Option key={project.id} value={project.uuid}>
+          {project.title}
+        </Option>
+      ))}
+    </Select>
+        </div>
     <div
       style={{
         padding: 24,
@@ -137,12 +186,26 @@ const Infos = () => {
         justifyContent: 'space-evenly'
       }}
     >
-      {dashboard && (
+      {projects.length === 0 ? (
+        // Exibe mensagem de aviso caso não existam projetos
+        <Empty
+          style={{
+            width: '100%',
+            textAlign: 'center',
+          }}
+          description={
+            <span>
+              Você ainda não possui nenhum projeto! <br />
+              <Link to={'/parceiro-digital/criar-projeto'}>Crie um projeto</Link> para visualizar o dashboard.
+            </span>
+          }
+        />
+      ) : dashboard ? (
         <>
           <Card>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <p style={{ fontSize: "15px" }}><b>Cadastro de afiliado:</b> <Link className="digitalPartnerLink" to={`/cadastro/${dashboard.digitalPartner.code}`} target="_blank" rel="noopener noreferrer">https://plataforma.nobisapp.com.br/cadastro/{dashboard.digitalPartner.code}</Link></p>
-              <CopyLinkButton link={`https://plataforma.nobisapp.com.br/cadastro/${dashboard.digitalPartner.code}`} />
+              <p style={{ fontSize: "15px" }}><b>Cadastro de afiliado:</b> <Link className="digitalPartnerLink" to={`/cadastro/${dashboard.project.code}`} target="_blank" rel="noopener noreferrer">https://plataforma.nobisapp.com.br/cadastro/{dashboard.project.code}</Link></p>
+              <CopyLinkButton link={`https://plataforma.nobisapp.com.br/cadastro/${dashboard.project.code}`} />
             </div>
           </Card>
           <div style={{
@@ -377,9 +440,12 @@ const Infos = () => {
             </MapContainer>
           </div>
         </>
+      ) : (
+        <Empty description="Carregando dados do projeto..." />
       )}
 
     </div>
+    </>
   )
 }
 

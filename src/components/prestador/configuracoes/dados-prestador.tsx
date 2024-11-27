@@ -22,15 +22,17 @@ const App: React.FC = () => {
 
   const getPlanoAtual = () => {
     if (!userData?.user?.subscriptionType) {
-      return 'Gratuito';
+      return 'Plano Atual: Gratuito';
     }
     switch (userData.user.subscriptionType) {
       case 'basic':
-        return 'Simples';
+        return 'Plano Atual: Simples';
       case 'premium':
-        return 'Ilimitado';
+        return 'Plano Atual: Ilimitado';
+      case 'project':
+        return 'Associado a projeto de Parceiro Digital';
       default:
-        return 'Gratuito';
+        return 'Plano Atual: Gratuito';
     }
   };
 
@@ -55,7 +57,7 @@ const App: React.FC = () => {
                 <h3>{userData.user.isClient === 0 ? userData.user.role : 'Cliente'}</h3>
                 <Link to={"/compra-creditos"} style={{ cursor: "pointer" }}>
                   <p style={{ fontWeight: "500", color: 'black' }}>
-                    Créditos de solicitações de serviço: {userData.tokens || 0} - Plano Atual: {getPlanoAtual()}
+                    Créditos de solicitações de serviço: {userData.tokens || 0} - {getPlanoAtual()}
                   </p>
                 </Link>
               </>

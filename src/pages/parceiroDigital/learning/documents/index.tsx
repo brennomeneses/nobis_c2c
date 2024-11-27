@@ -1,10 +1,23 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, theme, Upload, Form, Input, UploadFile, notification } from "antd";
+import { Button, theme, Upload, Form, Input, UploadFile, Select, notification } from "antd";
 import { useState } from "react";
 import type { GetProp, UploadProps } from 'antd';
 import baseUrl from "../../../../components/assets/schemas/baseUrl";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+type FieldType = {
+  projects?: string[];
+};
+
+const handleSelectAll = () => {
+  if (options) {
+    const allValues = options.map(option => option.value); // Get all values from options
+    form.setFieldsValue({ users: allValues }); // Programmatically set the selected values
+    setSelectedUsers(allValues as string[]); // Update local state
+  }
+};
+
 
 const Documents = () => {
   const [api, contextHolder] = notification.useNotification();
@@ -73,6 +86,20 @@ const Documents = () => {
       {contextHolder}
       <h1>Enviar documentos</h1>
       <Form form={form} name="file-upload-form" onFinish={onFinish}>
+      <Form.Item<FieldType>
+              label="Projetos"
+              name="projects"
+              rules={[{ required: true, message: 'Selecione ao menos um projeto' }]}
+            >
+              <Select
+                allowClear
+                mode="multiple"
+                notFoundContent="Você não possui nenhum projeto cadastrado"
+                style={{ width: '85%' }}
+                placeholder="Selecione os projetos"
+              />
+              <Button style={{ width: '15%' }} onClick={() => handleSelectAll()}>Selecionar todos</Button>
+            </Form.Item>
         <Form.Item
           name="name"
           rules={[{ required: true, message: 'Dê um titulo ao arquivo' }]}
