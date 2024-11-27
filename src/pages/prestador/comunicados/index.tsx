@@ -117,7 +117,7 @@ export default function Comunicados() {
               {msg.files?.map((file, index) => (
                 <React.Fragment key={index}>
                   <a
-                    href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}/${file.originalFilename}`}
+                    href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}`}
                     target='_blank'
                   >
                     {file.originalFilename}
