@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Badge, Button, Card, Form, Input, Select, theme, Upload } from "antd";
-import type { FormProps, UploadFile } from 'antd';
-import { useState } from 'react';
+import type { FormProps, UploadFile, SelectProps } from 'antd';
+import { useState, useEffect } from 'react';
 import { UploadChangeParam } from 'antd/es/upload';
 import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../../../components/assets/schemas/baseUrl';
@@ -21,6 +21,7 @@ const FlexContainer = styled.div`
 `
 
 type FieldType = {
+  projects?: string;
   title?: string;
   videoUrl?: string;
   tags?: string[];
@@ -29,9 +30,9 @@ type FieldType = {
 
 const NovoVideo = () => {
   const [loading, setLoading] = useState(false);
-
+  const [project, setProject] = "";
   const navigate = useNavigate();
-
+  const [projects, setProjects] = useState<SelectProps['options']>([]);
   const authToken = localStorage.getItem('digitalPartnerToken');
 
   const [imageUrl, setImageUrl] = useState<string | null>('https://t4.ftcdn.net/jpg/05/17/53/57/360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg');
@@ -84,6 +85,27 @@ const NovoVideo = () => {
     }
   };
 
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'insomnia/10.1.1',
+        Authorization: `Bearer ${authToken}`,
+      }
+    };
+
+    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+      .then(response => response.json())
+      .then(response => {
+        const projectOptions = response.map((project: Record<string, string>) => ({
+          label: project.title,
+          value: project.uuid
+        }));
+        setProjects(projectOptions);
+      })
+      .catch(err => console.error(err));
+  }, [authToken]);
+
   return (
     <div
       style={{
@@ -111,6 +133,26 @@ const NovoVideo = () => {
             >
               <Input />
             </Form.Item>
+
+            <Form.Item<FieldType>
+            label="Projetos"
+            name="projects"
+            rules={[{ required: true, message: 'Selecione ao menos um projeto' }]}
+          >
+            <Select
+              allowClear
+              mode="multiple"
+              notFoundContent="Nenhum projeto encontrado"
+              style={{ width: '100%' }}
+              placeholder="Selecione o projeto para enviar o vídeo"
+              options={projects}
+              onChange={(value) => {
+                if (value.length > 0) {
+                  setProject(value);
+                }
+              }}
+            />
+          </Form.Item>
 
             <Form.Item<FieldType>
               label="Link do vídeo"
