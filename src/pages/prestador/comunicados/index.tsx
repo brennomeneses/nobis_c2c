@@ -107,9 +107,9 @@ export default function Comunicados() {
         ),
         children: (
           <>
-          <p style={{ wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-            {linkify(content)}
-          </p>
+            <p style={{ wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+              {linkify(content)}
+            </p>
             <p>
               <b>Projeto: {projectName}</b>
             </p>

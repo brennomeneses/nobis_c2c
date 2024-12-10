@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Form, Input, Button, Checkbox, List, theme, Badge, Select } from 'antd';
+import { Form, Input, Button, Checkbox, List, theme, Badge, Select, SelectProps, notification } from 'antd';
 import baseUrl from '../../../../components/assets/schemas/baseUrl';
 import { useNavigate } from 'react-router-dom';
+
+type FieldType = {
+  projects?: string;
+};
+
 
 const VideosContainer = styled.div`
   display: flex;
@@ -31,8 +36,12 @@ const CreatePlaylist = () => {
 
   const [form] = Form.useForm();
   const [selectedVideos, setSelectedVideos] = useState([]);
+  const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
+  const [project, setProject] = useState("");
+  const [playlistName, setplaylistName] = "";
+  const [projects, setProjects] = useState<SelectProps['options']>([]);
 
   const token = localStorage.getItem('digitalPartnerToken');
 
@@ -68,26 +77,57 @@ const CreatePlaylist = () => {
         tags: values.tags
       })
     };
-    fetch(`${baseUrl}/playlists`, options)
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        setLoading(false)
-        navigate("/parceiro-digital/learning/videos")
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
+    fetch(`${baseUrl}/digital_partners/projects/${project}/playlist`, options)
+    .then(response => {
+      if (response.status === 200) {
+        return response.json(); // Processar o corpo da resposta
+      } else {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+    })
+    .then(responseData => {
+      notification.success({
+        message: 'Sucesso!',
+        description: 'Playlist criada com sucesso!',
+        placement: 'topRight',
       });
+      navigate("/parceiro-digital/learning/playlists");
+    })
+    .catch(err => {
+      notification.error({
+        message: 'Erro!',
+        description: `Não foi possível criar a playlist: ${err.message}`,
+        placement: 'topRight',
+      });
+    })
+    .finally(() => {
+      setLoading(false);
+    });    
   };
 
   const onVideoChange = (checkedValues) => {
     setSelectedVideos(checkedValues);
   };
 
-  const videoList = [{
-    id: 1, name: "teste", tags: ["tafgasd"]
-  }]
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    };
+
+    fetch(`${baseUrl}/digital_partners/projects`, options)
+      .then(response => response.json())
+      .then(response => {
+        const projectOptions = response.map((project: Record<string, string>) => ({
+          label: project.title,
+          value: project.uuid
+        }));
+        setProjects(projectOptions);
+      })
+      .catch(err => console.error(err));
+  }, [token]);
 
   /*
   data.map((video) => (
@@ -112,15 +152,35 @@ const CreatePlaylist = () => {
         flexDirection: 'column'
       }}
     >
-      <h1>Criar Playlist</h1>
+      <h1>Criar Trilha de Aprendizagem</h1>
       {data && (
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
             name="playlistName"
-            label="Nome da Playlist"
-            rules={[{ required: true, message: 'Please input the playlist name!' }]}
+            label="Nome da Trilha de Aprendizagem"
+            rules={[{ required: true, message: 'Por favor insira um nome!' }]}
           >
-            <Input placeholder="Enter playlist name" />
+            <Input placeholder="Insira o Nome da Trilha de Aprendizagem" />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            label="Projetos"
+            name="projects"
+            rules={[{ required: true, message: 'Selecione ao menos um projeto' }]}
+          >
+            <Select
+              allowClear
+              mode="multiple"
+              notFoundContent="Nenhum projeto encontrado"
+              style={{ width: '100%' }}
+              placeholder="Selecione o projeto para enviar o vídeo"
+              options={projects}
+              onChange={(value) => {
+                if (value.length > 0) {
+                  setProject(value);
+                }
+              }}
+            />
           </Form.Item>
 
           <Form.Item
@@ -140,7 +200,7 @@ const CreatePlaylist = () => {
             style={{
               width: "100%"
             }}
-            rules={[{ required: true, message: 'Please select at least one video!' }]}
+            rules={[{ required: true, message: 'Por favor selecione pelo menos um vídeo!' }]}
           >
             <Checkbox.Group
               onChange={onVideoChange}>
@@ -193,7 +253,7 @@ const CreatePlaylist = () => {
 
           <Form.Item>
             <Button loading={loading} type="primary" htmlType="submit">
-              Create Playlist
+              Criar Trilha de Aprendizagem
             </Button>
           </Form.Item>
         </Form>

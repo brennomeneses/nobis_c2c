@@ -7,6 +7,7 @@ import { validateCNPJ, validateCPF } from '../assets/schemas/validateDocuments';
 import { Link } from 'react-router-dom';
 import { countries, deficiencias, escolaridade, familias, profissoes, racas } from '../assets/schemas/signUpSchemas';
 import baseUrl from '../assets/schemas/baseUrl';
+import { useNavigate } from 'react-router-dom';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 const { TextArea } = Input;
@@ -28,6 +29,66 @@ const RegistrationForm = () => {
   const [birthdate, setBirthdate] = useState('');
   const [valorCobrado, setValorCobrado] = useState('');
   const [isProvider, setIsProvider] = useState(false);
+  const [projectCode, setProjectCode] = useState('');
+  const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
+  const navigate = useNavigate();
+
+  const handleJoinProject = async (projectCode) => {
+    const authToken = localStorage.getItem('authToken');
+  
+    if (!authToken) {
+      message.error("Token de autorização não encontrado.");
+      return;
+    }
+  
+    if (!projectCode.trim()) {
+      message.error("Por favor, insira um código válido.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/users/into/project/${projectCode}`, {
+        method: 'PUT',
+        headers: {
+          'User-Agent': 'insomnia/10.1.1',
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        // Tente interpretar a resposta como JSON, mas trate respostas que não são JSON
+        let data;
+        try {
+          data = await response.json();
+          message.success("Você entrou no projeto com sucesso!");
+          console.log("Resposta do servidor:", data);
+        } catch {
+          const text = await response.text();
+          message.success(`Você entrou no projeto com sucesso! Resposta: ${text}`);
+        }
+        setIsProjectModalVisible(false);
+        setProjectCode('');
+        navigate('/inicio/');
+      } else {
+        // Erro com a resposta do servidor
+        const errorText = await response.text();
+        message.error(`Erro: ${errorText || "Falha ao entrar no projeto."}`);
+      }
+    } catch (error) {
+      console.error("Erro ao entrar no projeto:", error);
+      message.error("Erro ao processar a solicitação.");
+    }
+  };
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('authToken');
+    if (authToken) {
+      const projectCode = pdCode; // Substituir pelo código do projeto necessário
+      handleJoinProject(projectCode);
+    }
+  }, []);
+
 
   useEffect(() => {
     if (pdCode) {

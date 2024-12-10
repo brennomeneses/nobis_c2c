@@ -10,7 +10,7 @@ const handleKeyPress = (event) => {
   }
 };
 
-const RegistrationForm = () => {
+const RegistrationForm = ({onLoginSuccess}) => {
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
   const [messageApi, contextHolderMessage] = message.useMessage();

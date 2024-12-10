@@ -37,6 +37,7 @@ import CreatePlaylist from './pages/parceiroDigital/learning/playlist';
 import Cadastrar from './pages/parceiroDigital/cadastrar';
 import Comunicados from './pages/prestador/comunicados';
 import MeusVideos from './pages/parceiroDigital/meus-videos';
+import Playlists from './pages/parceiroDigital/minhas-playlists';
 import Documents from './pages/parceiroDigital/learning/documents';
 import ListDocuments from './pages/parceiroDigital/learning/documents/list-documents';
 import Cartao from './pages/cartao';
@@ -156,6 +157,10 @@ const Routes: React.FC = () => {
       element: <Login />
     },
     {
+      path: "/login/:code",
+      element: <Login />
+    },
+    {
       path: "/cadastro",
       element: <Cadastro />
     },
@@ -213,6 +218,10 @@ const Routes: React.FC = () => {
           element: <MeusVideos />
         },
         {
+          path: "learning/playlists",
+          element: <Playlists />
+        },
+        {
           path: "learning/videos/novo",
           element: <NovoVideo />
         },
@@ -221,7 +230,7 @@ const Routes: React.FC = () => {
           element: <EditarVideo />
         },
         {
-          path: "learning/playlists",
+          path: "learning/playlists/novo",
           element: <CreatePlaylist />
         },
         {

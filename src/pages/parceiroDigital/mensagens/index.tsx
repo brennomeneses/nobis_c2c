@@ -20,7 +20,7 @@ const Mensageria = () => {
   const [loading, setLoading] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [form] = Form.useForm();
-  const [projectIDMsg, setProjectIDMsg] = useState<string[]>([]);
+  const [projectIdMsg, setProjectIdMsg] = useState<string[]>([]);
   const navigation = useNavigate();
 
   const token = localStorage.getItem("digitalPartnerToken") || "";
@@ -113,7 +113,7 @@ const Mensageria = () => {
 
     try {
       const response = await fetch(
-        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectIDMsg}/messages`,
+        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectIdMsg}/messages`,
         options
       );
       const data = await response.json();
@@ -178,7 +178,7 @@ const Mensageria = () => {
               onChange={(value) => {
                 if (value.length > 0) {
                   fetchUsersByProjects(value);
-                  setProjectIDMsg(value);
+                  setProjectIdMsg(value);
                 } else {
                   setUsers([]);
                 }
