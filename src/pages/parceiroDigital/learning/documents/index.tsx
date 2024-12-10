@@ -1,7 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, theme, Upload, Form, Input, UploadFile, Select, notification } from "antd";
-import { useState } from "react";
-import type { GetProp, UploadProps } from 'antd';
+import { useState, useEffect } from "react";
+import type { GetProp, UploadProps, SelectProps } from 'antd';
 import baseUrl from "../../../../components/assets/schemas/baseUrl";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -21,6 +21,7 @@ const handleSelectAll = () => {
 
 const Documents = () => {
   const [api, contextHolder] = notification.useNotification();
+  const [projects, setProjects] = useState<SelectProps['options']>([]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -28,14 +29,36 @@ const Documents = () => {
 
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [projectUuid, setProjectUuid] = useState<string>("");
 
   const token = localStorage.getItem('digitalPartnerToken');
+
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'insomnia/10.1.1',
+        Authorization: `Bearer ${token}`,
+      }
+    };
+
+    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+      .then(response => response.json())
+      .then(response => {
+        const projectOptions = response.map((project: Record<string, string>) => ({
+          label: project.title,
+          value: project.uuid
+        }));
+        setProjects(projectOptions);
+      })
+      .catch(err => console.error(err));
+  }, [token]);
 
   const onFinish = (values) => {
     console.log(values)
     const formData = new FormData();
     formData.append('file', values.upload.file);
-    formData.append('name', values.name)
+    formData.append('description', values.name)
 
     console.log(formData.get("file"))
 
@@ -47,7 +70,7 @@ const Documents = () => {
       body: formData
     };
 
-    fetch(`${baseUrl}/digital_partners/file`, options)
+    fetch(`${baseUrl}/digital_partners/projects/${projectUuid}/documents`, options)
       .then(response => response.json())
       .then(response => sucessNotification(response.originalFilename))
       .catch(err => failNotification());
@@ -87,19 +110,27 @@ const Documents = () => {
       <h1>Enviar documentos</h1>
       <Form form={form} name="file-upload-form" onFinish={onFinish}>
       <Form.Item<FieldType>
-              label="Projetos"
-              name="projects"
-              rules={[{ required: true, message: 'Selecione ao menos um projeto' }]}
-            >
-              <Select
-                allowClear
-                mode="multiple"
-                notFoundContent="Você não possui nenhum projeto cadastrado"
-                style={{ width: '85%' }}
-                placeholder="Selecione os projetos"
-              />
-              <Button style={{ width: '15%' }} onClick={() => handleSelectAll()}>Selecionar todos</Button>
-            </Form.Item>
+            label="Projeto"
+            name="projects"
+            rules={[{ required: true, message: 'Selecione ao menos um projeto' }]}
+          >
+            <Select
+              allowClear
+              mode="multiple"
+              notFoundContent="Nenhum projeto encontrado"
+              style={{ width: '100%' }}
+              placeholder="Selecione o projeto para enviar o vídeo"
+              options={projects}
+              onChange={(value) => {
+                console.log(value);
+                if (value.length > 0) {
+                  setProjectUuid(value);
+                }
+              }}
+            />
+            {/* <Button style={{ width: '15%' }} onClick={() => handleSelectAll()}>Selecionar todos</Button> */}
+          </Form.Item>
+            
         <Form.Item
           name="name"
           rules={[{ required: true, message: 'Dê um titulo ao arquivo' }]}
@@ -109,7 +140,7 @@ const Documents = () => {
         </Form.Item>
         <Form.Item
           name="upload"
-          rules={[{ required: true, message: 'Please upload a file!' }]}
+          rules={[{ required: true, message: 'Por favor envie um arquivo!' }]}
           label="Anexe aqui o seu arquivo"
         >
           <Upload
@@ -129,7 +160,7 @@ const Documents = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Submit
+            Enviar
           </Button>
         </Form.Item>
       </Form>

@@ -30,7 +30,7 @@ type FieldType = {
 
 const NovoVideo = () => {
   const [loading, setLoading] = useState(false);
-  const [project, setProject] = "";
+  const [projectUuid, setProjectUuid] = useState<string>("");
   const navigate = useNavigate();
   const [projects, setProjects] = useState<SelectProps['options']>([]);
   const authToken = localStorage.getItem('digitalPartnerToken');
@@ -62,7 +62,7 @@ const NovoVideo = () => {
 
     options.body = form;
 
-    fetch(`${baseUrl}/videos`, options)
+    fetch(`${baseUrl}/digital_partners/projects/${projectUuid}/videos`, options)
       .then(response => response.json())
       .then(response => {
         setLoading(false);
@@ -147,8 +147,9 @@ const NovoVideo = () => {
               placeholder="Selecione o projeto para enviar o vídeo"
               options={projects}
               onChange={(value) => {
+                console.log(value);
                 if (value.length > 0) {
-                  setProject(value);
+                  setProjectUuid(value);
                 }
               }}
             />

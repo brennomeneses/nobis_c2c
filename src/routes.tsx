@@ -156,6 +156,10 @@ const Routes: React.FC = () => {
       element: <Login />
     },
     {
+      path: "/login/:code",
+      element: <Login />
+    },
+    {
       path: "/cadastro",
       element: <Cadastro />
     },
