@@ -38,6 +38,6 @@ jobs:
           password: ${{ secrets.ftp_password }} # FTP password 
           local-dir: dist/
           timeout: 120000 # Increase timeout to 120 seconds
-          debug: true     # Enable debugging to get detailed logs
+          protocol: ftps
           server-dir: ./
 
