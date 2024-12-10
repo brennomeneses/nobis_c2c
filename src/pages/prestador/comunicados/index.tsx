@@ -24,6 +24,8 @@ export default function Comunicados() {
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const { token } = theme.useToken();
 
+  const authToken = localStorage.getItem('authToken');
+
   const panelStyle: React.CSSProperties = {
     marginBottom: 24,
     background: token.colorFillAlter,
@@ -36,8 +38,7 @@ export default function Comunicados() {
       method: 'GET',
       headers: {
         'User-Agent': 'insomnia/10.1.1',
-        Authorization:
-          'Bearer oat_NDU2.UGpEMTdjWXplWS1xZUliN3hOR2J0S09RNkpiZ2JkZkp3UkpHdWtlYzI0MjQzNDU4Nzk',
+        Authorization: `Bearer ${authToken}`,
       },
     };
 
@@ -117,7 +118,8 @@ export default function Comunicados() {
               {msg.files?.map((file, index) => (
                 <React.Fragment key={index}>
                   <a
-                    href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}/${file.originalFilename}`}
+                    href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}`}
+                    target='_blank'
                   >
                     {file.originalFilename}
                   </a>

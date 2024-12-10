@@ -66,7 +66,7 @@ const Sugestoes: React.FC<SugestoesProps> = ({ onSuggestionClick }) => {
               fontSize: '14px', 
               padding: '0 12px',
               marginRight: '8px',
-              marginBottom: '45px'
+              marginBottom: '135px'
             }}
           >
             {sugestao}
