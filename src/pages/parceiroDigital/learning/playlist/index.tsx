@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Form, Input, Button, Checkbox, List, theme, Badge, Select, SelectProps } from 'antd';
+import { Form, Input, Button, Checkbox, List, theme, Badge, Select, SelectProps, notification } from 'antd';
 import baseUrl from '../../../../components/assets/schemas/baseUrl';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,9 +36,11 @@ const CreatePlaylist = () => {
 
   const [form] = Form.useForm();
   const [selectedVideos, setSelectedVideos] = useState([]);
+  const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
-  const [project, setProject] = "";
+  const [project, setProject] = useState("");
+  const [playlistName, setplaylistName] = "";
   const [projects, setProjects] = useState<SelectProps['options']>([]);
 
   const token = localStorage.getItem('digitalPartnerToken');
@@ -75,37 +77,47 @@ const CreatePlaylist = () => {
         tags: values.tags
       })
     };
-    fetch(`${baseUrl}/playlists`, options)
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        setLoading(false)
-        navigate("/parceiro-digital/learning/videos")
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
+    fetch(`${baseUrl}/digital_partners/projects/${project}/playlist`, options)
+    .then(response => {
+      if (response.status === 200) {
+        return response.json(); // Processar o corpo da resposta
+      } else {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+    })
+    .then(responseData => {
+      notification.success({
+        message: 'Sucesso!',
+        description: 'Playlist criada com sucesso!',
+        placement: 'topRight',
       });
+      navigate("/parceiro-digital/learning/playlists");
+    })
+    .catch(err => {
+      notification.error({
+        message: 'Erro!',
+        description: `Não foi possível criar a playlist: ${err.message}`,
+        placement: 'topRight',
+      });
+    })
+    .finally(() => {
+      setLoading(false);
+    });    
   };
 
   const onVideoChange = (checkedValues) => {
     setSelectedVideos(checkedValues);
   };
 
-  const videoList = [{
-    id: 1, name: "teste", tags: ["tafgasd"]
-  }]
-
   useEffect(() => {
     const options = {
       method: 'GET',
       headers: {
-        'User-Agent': 'insomnia/10.1.1',
         Authorization: `Bearer ${token}`,
       }
     };
 
-    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+    fetch(`${baseUrl}/digital_partners/projects`, options)
       .then(response => response.json())
       .then(response => {
         const projectOptions = response.map((project: Record<string, string>) => ({

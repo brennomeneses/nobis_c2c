@@ -128,7 +128,7 @@ const Videos = () => {
             Postar Video-aula
           </BigButtom>
         </Link>
-        <Link to="/parceiro-digital/learning/playlists">
+        <Link to="/parceiro-digital/learning/playlists/novo">
           <BigButtom>
             <PlusCircleOutlined
               style={{ fontSize: '50px' }}

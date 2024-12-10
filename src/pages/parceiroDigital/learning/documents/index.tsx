@@ -3,6 +3,7 @@ import { Button, theme, Upload, Form, Input, UploadFile, Select, notification } 
 import { useState, useEffect } from "react";
 import type { GetProp, UploadProps, SelectProps } from 'antd';
 import baseUrl from "../../../../components/assets/schemas/baseUrl";
+import { useNavigate } from 'react-router-dom';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -20,6 +21,7 @@ const handleSelectAll = () => {
 
 
 const Documents = () => {
+  const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const [projects, setProjects] = useState<SelectProps['options']>([]);
 
@@ -72,12 +74,14 @@ const Documents = () => {
 
     fetch(`${baseUrl}/digital_partners/projects/${projectUuid}/documents`, options)
       .then(response => response.json())
-      .then(response => sucessNotification(response.originalFilename))
+      .then(response => {sucessNotification(response.originalFilename);
+        navigate("/parceiro-digital/learning/documentos");
+      })
       .catch(err => failNotification());
   };
 
   const sucessNotification = (filename: string) => {
-    api.info({
+    api.success({
       message: 'Arquivo enviado com sucesso!',
       description: `Arquivo ${filename} foi enviado com sucesso`,
     });
