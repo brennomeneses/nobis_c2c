@@ -5,6 +5,7 @@ import { EditOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import Prestador from '../../components/prestador/footer';
 import Cliente from '../../components/cliente/footer';
+import baseUrl from '../../components/assets/schemas/baseUrl';
 
 export default function Classes() {
   const authToken = localStorage.getItem('authToken');
@@ -22,7 +23,7 @@ export default function Classes() {
           }
         };
 
-        const response = await fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/forums', options);
+        const response = await fetch(baseUrl + '/forums', options);
         if (!response.ok) {
           throw new Error('Failed to fetch posts');
         }

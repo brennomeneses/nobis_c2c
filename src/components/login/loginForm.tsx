@@ -4,38 +4,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logos/nobis_principal_branca.png';
 import baseUrl from '../assets/schemas/baseUrl';
 
-const handleKeyPress = (event) => {
-  if (event.key === 'Enter') {
-    login();
-  }
-};
-
 const RegistrationForm = ({onLoginSuccess}) => {
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
   const [messageApi, contextHolderMessage] = message.useMessage();
 
-  function login() {
-    let email = document.getElementById("email").value;
-    let pwd = document.getElementById("pwd").value;
+  function login(values: {
+    email: string;
+    password: string;
+  }) {
+    const email = values.email;
+    const pwd = values.password;
 
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.2.0' },
+      headers: { 'Content-Type': 'application/json' },
       body: `{"email":"${email}","password":"${pwd}"}`
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/login', options)
+    fetch(baseUrl + '/login', options)
       .then(async response => {
         if (!response.ok) {
           // Handle error response
           const errorText = await response.text(); // read the error message as text
-
-          if (errorText === ('Invalid Email' || 'Invalid Password'))
-            messageApi.open({
-                type: 'error',
-                content: 'E-mail ou senha incorretos',
-              });
 
           throw new Error(errorText); // throw the error to be caught in the catch block
         }
@@ -48,11 +39,18 @@ const RegistrationForm = ({onLoginSuccess}) => {
         window.location.href = `/inicio`;
       })
       .catch(err => {
+        if(err.message === 'Invalid Email' || err.message === 'Invalid Password'){
+          messageApi.open({
+            type: 'error',
+            content: 'E-mail ou senha incorretos',
+          });
+          return;
+        }
         messageApi.open({
           type: 'error',
           content: 'Erro interno, tente novamente mais tarde.',
         });
-        console.error(err)
+        console.log(err)
       });
   }
   
@@ -134,26 +132,49 @@ const RegistrationForm = ({onLoginSuccess}) => {
         <img src={logo} style={{ height: '200px' }} />
       </div>
       <p style={{ textAlign: "left", color: "white", fontWeight: "500" }}>Login</p>
-      <Input
-        placeholder="Insira seu e-mail"
-        style={{ width: '300px', marginBottom: '10px' }}
-        id="email"
-        onKeyPress={handleKeyPress}
-      />
-      <Input.Password
-        placeholder="Insira sua senha"
-        style={{ width: '300px', marginBottom: '20px' }}
-        id="pwd"
-        onKeyPress={handleKeyPress}
-      />
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: '#FFAB00', borderColor: '#FFAB00', width: '300px' }}
-        onClick={login}
+      <Form
+        onFinish={login}
+        layout="vertical"
       >
-        Continuar
-      </Button>
+        <Form.Item
+          name="email"
+          rules={[
+            { required: true, message: 'Por favor coloque o seu email!' },
+          ]}
+          style={{ marginBottom: '10px' }}
+        >
+          <Input
+            placeholder="Insira seu e-mail"
+            style={{ width: '300px'}}
+            id="email"
+            
+            />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            { required: true, message: 'Por favor coloque a sua senha!' },
+          ]}
+          style={{ marginBottom: '20px' }}
+        >
+          <Input.Password
+            placeholder="Insira sua senha"
+            style={{ width: '300px'}}
+            id="pwd"
+            
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType='submit'
+            block
+            style={{ backgroundColor: '#FFAB00', borderColor: '#FFAB00', width: '300px' }}
+          >
+            Continuar
+          </Button>
+        </Form.Item>
+      </Form>
       <br />
       <a href="#" onClick={() => forgotPassowrd()} className="text" style={{ textDecoration: "underline" }}>Esqueci minha senha</a>
       <Divider style={{ backgroundColor: '#624B7B' }} />

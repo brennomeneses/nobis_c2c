@@ -17,15 +17,15 @@ const RegistrationForm = () => {
   const url = window.location.href;
   const pdCode = url.split('/cadastro/')[1];
 
+  const [loading, setLoading] = useState(false);
+
   const [api, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm();
   const [serviceType, setServiceType] = useState('request');
   const [hasDisability, setHasDisability] = useState(false);
   const [pfp, setPfp] = useState<File | null>(null);
-  const [uploadPortfolioList, setUploadPortfolioList] = useState<any[]>([]);
   const [checked, setChecked] = useState(false);
-  const [budgetDisabled, setBudgetDisabled] = useState(false);
   const [birthdate, setBirthdate] = useState('');
   const [valorCobrado, setValorCobrado] = useState('');
   const [isProvider, setIsProvider] = useState(false);
@@ -33,7 +33,7 @@ const RegistrationForm = () => {
   const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
   const navigate = useNavigate();
 
-  const handleJoinProject = async (projectCode) => {
+  const handleJoinProject = async (projectCode: string) => {
     const authToken = localStorage.getItem('authToken');
   
     if (!authToken) {
@@ -47,7 +47,8 @@ const RegistrationForm = () => {
     }
   
     try {
-      const response = await fetch(`https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/users/into/project/${projectCode}`, {
+      setLoading(true);
+      const response = await fetch(`${baseUrl}/users/into/project/${projectCode}`, {
         method: 'PUT',
         headers: {
           'User-Agent': 'insomnia/10.1.1',
@@ -68,16 +69,19 @@ const RegistrationForm = () => {
           message.success(`Você entrou no projeto com sucesso! Resposta: ${text}`);
         }
         setIsProjectModalVisible(false);
+        setLoading(false);
         setProjectCode('');
         navigate('/inicio/');
       } else {
         // Erro com a resposta do servidor
         const errorText = await response.text();
+        setLoading(false);
         message.error(`Erro: ${errorText || "Falha ao entrar no projeto."}`);
       }
     } catch (error) {
       console.error("Erro ao entrar no projeto:", error);
       message.error("Erro ao processar a solicitação.");
+      setLoading(false);
     }
   };
 
@@ -160,9 +164,11 @@ const RegistrationForm = () => {
     formData.append('scholarship', values.scholarship);
 
     try {
+      setLoading(true);
       const response = await fetch(`${baseUrl}/users`, { method: 'POST', body: formData });
       if (response.ok) {
         window.location.href = '/login';
+        setLoading(false);
       } else {
         throw new Error('Failed to register');
       }
@@ -172,6 +178,7 @@ const RegistrationForm = () => {
         description: 'Algo deu errado, revise os campos e tente novamente',
         duration: 5,
       });
+      setLoading(false);
       console.error(err);
     }
   };
@@ -209,7 +216,7 @@ const RegistrationForm = () => {
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={{
-        serviceType: true,
+        serviceType: 'request',
         profilePicture: { fileList: [] },
         uploadPortfolio: { fileList: [] },
         paymentTypes: [],
@@ -223,7 +230,7 @@ const RegistrationForm = () => {
         </>
       ) : (
         <>
-          <Form.Item name="serviceType" label="Tipo de Serviço">
+          <Form.Item name="serviceType" label="Tipo de Serviço" rules={[{ required: true, message: 'Por favor, escolha o tipo de serviço!' }]}>
             <Radio.Group onChange={onServiceTypeChange}>
               <Radio value="request">Quero solicitar serviços</Radio>
               <Radio value="provide">Quero prestar serviços</Radio>
@@ -541,7 +548,7 @@ const RegistrationForm = () => {
       />
       <br />
       <Form.Item>
-        <Button type="primary" htmlType="submit">Cadastrar</Button>
+        <Button type="primary" htmlType="submit" loading={loading}>Cadastrar</Button>
       </Form.Item>
     </Form>
   );

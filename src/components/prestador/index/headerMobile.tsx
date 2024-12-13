@@ -20,7 +20,7 @@ const RegistrationForm = () => {
   const navigate = useNavigate();
 
   const handlePrestadorClick = () => {
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users/create', options)
+    fetch(baseUrl + '/users/create', options)
       .then(response => response.json())
       .then(data => {
         localStorage.setItem("isClient", "1");

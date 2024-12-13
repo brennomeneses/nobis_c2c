@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Select, Divider, Checkbox, Button } from 'antd';
+import baseUrl from "../../assets/schemas/baseUrl";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -98,7 +99,7 @@ const App: React.FC = () => {
       })
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/services', options)
+    fetch(baseUrl + '/services', options)
       .then(response => response.json())
       .then(response => {
         const endService = {

@@ -3,6 +3,7 @@ import logo from '../../assets/logos/nobis_horizontal_branca.png';
 import notif from '../../assets/icons/notif.png';
 import { Menu, Dropdown, Space, Divider } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import baseUrl from '../../assets/schemas/baseUrl';
 
 const authToken = localStorage.getItem('authToken');
 
@@ -19,7 +20,7 @@ const App: React.FC = () => {
   const navigate = useNavigate();
 
   const handlePrestadorClick = () => {
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users/create', options)
+    fetch(baseUrl + '/users/create', options)
       .then(response => response.json())
       .then(data => {
         localStorage.setItem("isClient", "1");

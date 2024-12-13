@@ -3,6 +3,7 @@ import type { FormProps, SelectProps } from 'antd';
 import { useEffect, useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../../../components/assets/schemas/baseUrl";
 
 type FieldType = {
   projects?: string[];
@@ -35,7 +36,7 @@ const Mensageria = () => {
       }
     };
 
-    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+    fetch(baseUrl + '/digital_partners/projects', options)
       .then(response => response.json())
       .then(response => {
         const projectOptions = response.map((project: Record<string, string>) => ({
@@ -61,7 +62,7 @@ const Mensageria = () => {
       const usersFromProjects = await Promise.all(
         projectIds.map(async (projectId) => {
           const response = await fetch(
-            `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectId}`,
+            `${baseUrl}/digital_partners/projects/${projectId}`,
             options
           );
           const projectData = await response.json();
@@ -113,7 +114,7 @@ const Mensageria = () => {
 
     try {
       const response = await fetch(
-        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectIdMsg}/messages`,
+        `${baseUrl}/digital_partners/projects/${projectIdMsg}/messages`,
         options
       );
       const data = await response.json();

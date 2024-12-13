@@ -44,7 +44,7 @@ const Documents = () => {
       }
     };
 
-    fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+    fetch(baseUrl + '/digital_partners/projects', options)
       .then(response => response.json())
       .then(response => {
         const projectOptions = response.map((project: Record<string, string>) => ({

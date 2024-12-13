@@ -3,6 +3,7 @@ import { Form, Input, Button, Radio, Select, Checkbox, Upload, InputNumber, Aler
 import { UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useHistory, useLocation } from 'react-router-dom';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -93,7 +94,7 @@ const OnboardingForm = () => {
       body: formData,
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users', options)
+    fetch(baseUrl + '/users', options)
       .then(response => response.text())
       .then(response => { window.location.href = '/login' })
       .catch(err => console.error(err));

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Login from '../../components/login/loginForm';
 import { message } from 'antd';
+import baseUrl from '../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function Inicio() {
     const authToken = localStorage.getItem('authToken');
   
     try {
-      const response = await fetch(`https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/users/into/project/${projectCode}`, {
+      const response = await fetch(`${baseUrl}/users/into/project/${projectCode}`, {
         method: 'PUT',
         headers: {
           'User-Agent': 'insomnia/10.1.1',

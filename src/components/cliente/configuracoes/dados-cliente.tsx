@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import imagem from '../../assets/imgs/prestador.png';
+import baseUrl from '../../assets/schemas/baseUrl';
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -13,7 +14,7 @@ const App: React.FC = () => {
       }
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users', options)
+    fetch(baseUrl + '/users', options)
       .then(response => response.json())
       .then(response => setUserData(response))
       .catch(err => console.error(err));
@@ -28,7 +29,7 @@ const App: React.FC = () => {
       {userData && (
         <div className="destaque">
           <div className="destaqueImg">
-            <img className="iconPesquisa" src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${userData.user.avatar}`} />
+            <img className="iconPesquisa" src={`${baseUrl}/uploads/${userData.user.avatar}`} />
           </div>
           <div className="destaquePrestador">
             {userData && (

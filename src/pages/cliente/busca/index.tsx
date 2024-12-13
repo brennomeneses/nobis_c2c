@@ -9,6 +9,7 @@ import { useMediaQuery } from 'react-responsive';
 import Header from '../../../components/cliente/index/header';
 import HeaderMobile from '../../../components/cliente/index/headerCel';
 import Card from '../../../components/cliente/busca/prestadores';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const authToken = localStorage.getItem('authToken');
@@ -46,7 +47,7 @@ export default function Inicio() {
         body: JSON.stringify({ role: profissao })
       };
 
-      fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users/find', options)
+      fetch(baseUrl + '/users/find', options)
         .then(response => response.json())
         .then(response => {
           setPrestadores(response);

@@ -5,6 +5,7 @@ import { useMediaQuery } from 'react-responsive';
 import Header from '../../../components/cliente/index/header'
 import HeaderMobile from '../../../components/cliente/index/headerCel'
 import { Divider } from 'antd';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const authToken = localStorage.getItem('authToken');
@@ -22,7 +23,7 @@ export default function Inicio() {
       }
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/services/rooms/all', options)
+    fetch(baseUrl + '/services/rooms/all', options)
       .then(response => response.json())
       .then(data => {
         if (Array.isArray(data)) {

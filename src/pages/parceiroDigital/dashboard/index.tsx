@@ -33,7 +33,7 @@ const Dashboard: React.FC = () => {
       }
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/digital_partners/create', options)
+    fetch(baseUrl + '/digital_partners/create', options)
       .then(response => response.json())
       .then(response => {
         console.log(response.digitalPartner.profilePicture)

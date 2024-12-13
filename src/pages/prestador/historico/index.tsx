@@ -6,6 +6,7 @@ import Header from '../../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
 import HeaderMobile from '../../../components/prestador/index/headerMobile'
 import { Divider } from 'antd';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const [solicitacao, setSolicitacao] = useState([]);
@@ -26,7 +27,7 @@ export default function Inicio() {
       }
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/services', options)
+    fetch(baseUrl + '/services', options)
       .then(response => response.json())
       .then(response => setSolicitacao(response))
       .catch(err => console.error(err));

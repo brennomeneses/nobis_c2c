@@ -4,6 +4,7 @@ import { FormProps, message } from 'antd';
 import { Button, Form, Input } from 'antd';
 import logo from '../../../components/assets/logos/nobis_horizontal.png';
 import { Typography } from 'antd';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 const { Title } = Typography;
 
@@ -43,7 +44,7 @@ const App: React.FC = () => {
       })
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/digital_partners/login', options)
+    fetch(baseUrl + '/digital_partners/login', options)
       .then(response => response.json())
       .then(response => {
         localStorage.setItem('digitalPartnerToken', response.token)

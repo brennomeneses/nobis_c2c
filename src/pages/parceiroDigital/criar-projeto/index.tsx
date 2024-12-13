@@ -3,6 +3,7 @@ import type { FormProps } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
+import baseUrl from "../../../components/assets/schemas/baseUrl";
 
 type FieldType = {
   proj_name?: string;
@@ -70,7 +71,7 @@ const CriarProjeto = () => {
 
     // Realiza o fetch para criar o projeto
     fetch(
-      "https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects",
+      baseUrl +"/digital_partners/projects",
       options
     )
       .then((response) => response.json())

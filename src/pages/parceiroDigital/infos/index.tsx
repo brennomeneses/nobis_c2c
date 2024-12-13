@@ -9,11 +9,12 @@ import { Button, message, Card, Select } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { Line } from "@ant-design/charts";
 import ODS from "../../../components/parceiroDigital/ods";
+import baseUrl from "../../../components/assets/schemas/baseUrl";
 
 const { Option } = Select;
 
 const icon = (filename: string) => new L.Icon({
-  iconUrl: `https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${filename}`,
+  iconUrl: `${baseUrl}/uploads/${filename}`,
   iconSize: [45, 45],
   className: 'map_icon'
 })
@@ -86,7 +87,7 @@ const Infos = () => {
         },
       };
 
-      fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects', options)
+      fetch(baseUrl + '/digital_partners/projects', options)
         .then(response => response.json())
         .then(response => setProjects(response)) // Armazena os projetos
         .catch(err => console.error(err));
@@ -105,7 +106,7 @@ const Infos = () => {
           },
         };
 
-        fetch(`https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/projects/${projectUuid}/edit`, options)
+        fetch(`${baseUrl}/digital_partners/projects/${projectUuid}/edit`, options)
           .then(response => response.json())
           .then(response => {setDashboard(response); console.log(response)}) // Atualiza os dados do dashboard
           .catch(err => console.error(err));

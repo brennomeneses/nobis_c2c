@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import imagem from '../../assets/imgs/prestador.png';
 import { Link } from 'react-router-dom';
+import baseUrl from '../../assets/schemas/baseUrl';
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -14,7 +15,7 @@ const App: React.FC = () => {
       }
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users', options)
+    fetch(baseUrl + '/users', options)
       .then(response => response.json())
       .then(response => setUserData(response))
       .catch(err => console.error(err));

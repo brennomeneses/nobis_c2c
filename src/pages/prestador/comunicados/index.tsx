@@ -7,6 +7,7 @@ import Footer from '../../../components/prestador/footer';
 import Header from '../../../components/prestador/index/header';
 import { useMediaQuery } from 'react-responsive';
 import HeaderMobile from '../../../components/prestador/index/headerMobile';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -43,7 +44,7 @@ export default function Comunicados() {
     };
 
     fetch(
-      'https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/users/project/messages',
+      baseUrl + '/users/project/messages',
       options
     )
       .then((response) => response.json())

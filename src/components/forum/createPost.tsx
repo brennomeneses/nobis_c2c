@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Radio, Select } from 'antd';
 import { FormInstance } from 'antd/lib/form';
+import baseUrl from '../assets/schemas/baseUrl';
 
 const { TextArea } = Input;
 
@@ -39,7 +40,7 @@ const PostForm: React.FC<PostFormProps> = ({ onSubmit }) => {
     };
 
     // Fazer a requisição
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/forums', options)
+    fetch(baseUrl + '/forums', options)
       .then(response => response.json())
       .then(response => {
         window.location.href = `/post/${response.uuid}`;

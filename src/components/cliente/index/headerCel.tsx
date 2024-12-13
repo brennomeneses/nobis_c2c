@@ -318,14 +318,14 @@ const RegistrationForm = () => {
   };
 
   const handlePrestadorClick = () => {
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users', options)
+    fetch(baseUrl + '/users', options)
       .then(response => response.json())
       .then(data => {
         const { user } = data;
         if (user.about === undefined || user.role === null) {
           setIsModalVisible(true);
         } else {
-          fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users/create', options)
+          fetch(baseUrl + '/users/create', options)
             .then(response => response.json())
             .then(data => {
               localStorage.setItem("isClient", "0");
@@ -362,10 +362,10 @@ const RegistrationForm = () => {
       body: JSON.stringify(body)
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users/0', updateOptions)
+    fetch(baseUrl + '/users/0', updateOptions)
       .then(response => response.json())
       .then(response => {
-        fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users/create', options)
+        fetch(baseUrl + '/users/create', options)
           .then(response => response.json())
           .then(data => {
             localStorage.setItem("isClient", "0");

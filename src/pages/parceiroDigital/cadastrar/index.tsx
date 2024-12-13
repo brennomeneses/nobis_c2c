@@ -5,6 +5,7 @@ import InputMask from 'react-input-mask';
 import { Typography, FormProps, Form, Input, Button, message, Select, Upload } from 'antd';
 import { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 const { Title } = Typography;
 
@@ -60,9 +61,9 @@ const Cadastrar = () => {
     setCepLoading(true)
     const { value } = event.target;
 
-    const baseUrl = `https://viacep.com.br/ws/${value}/json/`;
+    const viaCepBaseUrl = `https://viacep.com.br/ws/${value}/json/`;
 
-    fetch(baseUrl).then((response) => response.json())
+    fetch(viaCepBaseUrl).then((response) => response.json())
       .then(data => {
         console.log(data)
         setCepLoading(true)
@@ -101,7 +102,7 @@ const Cadastrar = () => {
       body: form
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/digital_partners/', options)
+    fetch(baseUrl + '/digital_partners/', options)
       .then(response => response.json())
       .then(response => {
         console.log(response)

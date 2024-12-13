@@ -24,7 +24,7 @@ const Cartao: React.FC<CartaoProps> = ({ showEmail, showAddress }) => {
       },
     };
 
-    fetch('https://brenno-envoriment-node.1pc5en.easypanel.host/users', options)
+    fetch(baseUrl + '/users', options)
       .then(response => response.json())
       .then(response => setUserData(response))
       .catch(err => console.error(err));
