@@ -23,7 +23,7 @@ const Footer = () => (
   <div className='footer'>
     <div className='icons'>
       <Popover content={"Página Inicial"}><Link to='/inicio'><img src={home} /></Link></Popover>
-      <Popover content={"Comunicados"}><Link to='/comunicados'><img src={broadcast} /></Link></Popover>
+      <Popover content={"Projetos"}><Link to='/learning'><img src={broadcast} /></Link></Popover>
       <Popover content={"Chats de serviços"}><Link to='/chats'><img src={chat} /></Link></Popover>
       <Popover content={"Histórico de serviços"}><Link to='/historico' style={{ color: "black", fontSize: "21px" }}><HistoryOutlined /></Link></Popover>
       <Popover content={"Configurações"}><Link to='/configuracoes'><img src={config} /></Link></Popover>

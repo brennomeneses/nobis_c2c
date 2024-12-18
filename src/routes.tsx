@@ -48,6 +48,9 @@ import GerenciarAssinatura from './pages/prestador/gerenciar-assinatura';
 import VideoPlayer from './pages/videos';
 import FAQ from './pages/faq';
 import ForgotPassword from './pages/forgot-password';
+import LearningIndex from './pages/prestador/learning';
+import PrestadorVideos from './pages/prestador/learning/videos';
+
 
 const Routes: React.FC = () => {
 
@@ -236,6 +239,33 @@ const Routes: React.FC = () => {
         {
           path: "learning/documentos/novo",
           element: <Documents />
+        },
+        {
+          path: "learning/documentos",
+          element: <ListDocuments />
+        }
+      ]
+    },
+    {
+      path: "/learning",
+      element: <LearningIndex />,
+      //loader: useAuthDigitalPartner,
+      children: [
+        {
+          path: "",
+          element: <PrestadorVideos />
+        },
+        {
+          path: "mensageria",
+          element: <Mensageria />
+        },
+        {
+          path: "learning/videos/todos",
+          element: <MeusVideos />
+        },
+        {
+          path: "learning/playlists",
+          element: <Playlists />
         },
         {
           path: "learning/documentos",

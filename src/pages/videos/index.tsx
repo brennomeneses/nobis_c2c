@@ -128,6 +128,7 @@ export default function Inicio() {
           </Button>
         </div>
       </div>
+      <br/><br/><br/><br/> <br/><br/><br/>
       <Footer />
     </>
 
