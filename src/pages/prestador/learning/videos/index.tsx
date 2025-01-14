@@ -1,65 +1,87 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, Button, Card, Modal, theme, Divider } from "antd";
-import Footer from '../../../../components/prestador/footer';
+import { Tag, Button, Card, Modal, theme, Divider, Rate } from "antd";
+
 import baseUrl from '../../../../components/assets/schemas/baseUrl';
-import YouTube, { YouTubeEvent } from 'react-youtube';
 
 const { Meta } = Card;
-const { confirm } = Modal;
 
 export default function MeusVideos() {
-  const [videoLink, setVideoLink] = useState('');
-  const [watchTime, setWatchTime] = useState(0); // Total watch time in seconds
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [videos, setVideos] = useState(null);
-  const startTimeRef = useRef(0); // To store when the user starts watching
-
+  const [videos, setVideos] = useState([]);
+  const [docs, setDocs] = useState([]);
+  const [trilhas, setTrilhas] = useState([]);
+  const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
+  const [isDocModalVisible, setIsDocModalVisible] = useState(false);
+  const [isTrilhaModalVisible, setIsTrilhaModalVisible] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(null);
+  const [currentDoc, setCurrentDoc] = useState(null);
+  const [currentTrilha, setCurrentTrilha] = useState(null);
   const navigate = useNavigate();
   const { uuid } = useParams();
 
   const token = localStorage.getItem('authToken');
   const isClient = localStorage.getItem('isClient');
 
-  let startedAt = new Date();
+  const [ratings, setRatings] = useState({
+    applicability: 0,
+    understanding: 0,
+    development: 0,
+    income: 0,
+    opportunities: 0,
+  });
 
-  const handleStateChange = (event: YouTubeEvent) => {
-    const player = event.target;
-    const playerState = player.getPlayerState();
-
-    if (playerState === 1) { // 1 is PLAYING
-      setIsPlaying(true);
-      startTimeRef.current = player.getCurrentTime();
-    }
-
-    if (playerState === 2 || playerState === 0) { // 2 is PAUSED, 0 is ENDED
-      setIsPlaying(false);
-      const currentTime = new Date();
-      const difference = currentTime.getTime() - startedAt.getTime();
-
-      setWatchTime((prevWatchTime) => prevWatchTime + difference); // Time in milliseconds
-      startedAt = new Date();
-    }
+  const handleRateChange = (key, value) => {
+    setRatings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleFinish = () => {
+  const handleSubmit = async () => {
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        videoSecconds: watchTime / 1000
-      })
+      body: JSON.stringify(ratings),
     };
 
-    fetch(`${baseUrl}/learning/video/commit/${uuid}`, options)
-      .then(response => response.json())
-      .then(() => {
-        navigate('/prestador/videos');
-      })
-      .catch(err => console.error(err));
+    try {
+      const response = await fetch(
+        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/videos/rate/${currentVideo.videoUuid}`,
+        options
+      );
+      const result = await response.json();
+      console.log(result);
+      alert('Avaliação enviada com sucesso!');
+      closeVideoModal();
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao enviar a avaliação. Tente novamente.');
+    }
+  };
+
+  const handleDocSubmit = async () => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(ratings),
+    };
+
+    try {
+      const response = await fetch(
+        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/documents/rate/${currentDoc.docUuid}`,
+        options
+      );
+      const result = await response.json();
+      console.log(result);
+      alert('Avaliação enviada com sucesso!');
+      closeVideoModal();
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao enviar a avaliação. Tente novamente.');
+    }
   };
 
   useEffect(() => {
@@ -74,51 +96,147 @@ export default function MeusVideos() {
     const options = {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     };
 
-    fetch(`${baseUrl}/learning`, options)
+    // Fetch vídeos
+    fetch(`${baseUrl}/users/project/videos`, options)
+      .then((response) => response.json())
+      .then((response) => setVideos(response))
+      .catch((err) => console.error(err));
+
+    // Fetch documentos
+    fetch(`${baseUrl}/digital_partners/projects/all/documents`, options)
+      .then((response) => response.json())
+      .then((response) => setDocs(response))
+      .catch((err) => console.error(err));
+
+    // Fetch trilhas de aprendizagem
+    fetch(`${baseUrl}/learning/create`, options)
       .then(response => response.json())
-      .then(response => setVideos(response))
+      .then(response => setTrilhas(response))
       .catch(err => console.error(err));
   }, [navigate, token, isClient]);
 
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      handleFinish();
-      event.preventDefault();
-      event.returnValue = "";
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  const generateModal = (data) => {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const videoId = data.link.match(regex)[1];
-
-    confirm({
-      width: "100%",
-      content: (
-        <>
-          <YouTube
-            videoId={videoId}
-            onStateChange={handleStateChange}
-          />
-          <Divider />
-          <h3>O que você achou deste vídeo?</h3>
-          <Button type="primary" onClick={handleFinish} style={{ marginTop: '20px' }}>
-            Marcar vídeo-aula como assistida
-          </Button>
-        </>
-      )
-    });
+  const openVideoModal = (video) => {
+    const regex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const videoId = video.link.match(regex)[1];
+    setCurrentVideo({ videoId, video, videoUuid: video.uuid });
+    setIsVideoModalVisible(true);
   };
+
+  const closeVideoModal = () => {
+    setIsVideoModalVisible(false);
+    setCurrentVideo(null);
+  };
+
+  const openDocModal = (doc) => {
+    setCurrentDoc({ doc, docUuid: doc.filename }); // Enviando um único objeto
+    setIsDocModalVisible(true);
+  };
+  
+  const closeDocModal = () => {
+    setIsDocModalVisible(false);
+    setCurrentDoc(null);
+  };
+  
+
+  const renderDocContent = (doc) => {
+    const fileUrl = `${baseUrl}/uploads/${doc.filename}`;
+    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(doc.filename);
+    const isPdf = /\.pdf$/i.test(doc.filename);
+
+    if (isImage) {
+      return <img src={fileUrl} alt={doc.originalFilename} style={{ width: '100%', maxHeight: '500px', objectFit: 'contain' }} />;
+    } else if (isPdf) {
+      return (
+        <iframe
+          src={fileUrl}
+          title={doc.originalFilename}
+          style={{ width: '100%', height: '500px', border: 'none' }}
+        />
+      );
+    } else {
+      return (
+        <p>
+          O tipo deste documento não é suportado para visualização. Você pode baixá-lo abaixo.
+        </p>
+      );
+    }
+  };
+
+  const openTrilhaModal = (trilha) => {
+    setCurrentTrilha(trilha);
+    setIsTrilhaModalVisible(true);
+  };
+
+  const closeTrilhaModal = () => {
+    setIsTrilhaModalVisible(false);
+    setCurrentTrilha(null);
+  };
+
+  const renderTrilhaContent = (trilha) => {
+    return (
+      <>
+        {trilha?.videos?.length > 0 ? (
+          <div key={trilha.id}>
+            <h3>{trilha.name}</h3>
+            <h4>Vídeos</h4>
+            {trilha.videos.map((video) => (
+              <Card
+                key={`${trilha.id}-${video.uuid}`}
+                hoverable
+                style={{ width: '100%', marginBottom: '16px' }}
+                cover={
+                  <img
+                    alt={video.title}
+                    src={
+                      video.thumbnail
+                        ? `${baseUrl}/uploads/${video.thumbnail}`
+                        : 'https://via.placeholder.com/300'
+                    }
+                    onClick={() => {
+                      openVideoModal(video);
+                      closeTrilhaModal();
+                    }}
+                  />
+                }
+              >
+                <Meta title={video.title} />
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p>Nenhum vídeo associado a esta trilha por enquanto.</p>
+        )}
+  
+        <Divider />
+  
+        <h4>Documentos</h4>
+        {trilha.files?.length > 0 ? (
+          trilha.files.map((file) => (
+            <Card
+              key={file.id}
+              hoverable
+              style={{ width: '100%', marginBottom: '16px' }}
+              onClick={() => {
+                openDocModal(file);
+                closeTrilhaModal();
+              }}
+            >
+              <Meta title={file.originalFilename} />
+            </Card>
+          ))
+        ) : (
+          <p>Nenhum documento associado a esta trilha por enquanto.</p>
+        )}
+      </>
+    );
+  };
+  
+  
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -126,43 +244,206 @@ export default function MeusVideos() {
 
   return (
     <>
-    <h2>Vídeos de projetos</h2>
-      <div
-        style={{
-          paddingTop: 24,
-          minHeight: 380,
-          background: colorBgContainer,
-          borderRadius: borderRadiusLG,
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-evenly'
-        }}
+      {/* Modal para Vídeos */}
+      <Modal
+        visible={isVideoModalVisible}
+        onCancel={closeVideoModal}
+        maskClosable={true}
+        footer={null}
+        width={800}
       >
-        
-        {videos ? (
+        {currentVideo && (
+          <div style={{ textAlign: 'center' }}>
+            <iframe
+              title="Video"
+              width="100%"
+              height="400px"
+              src={`https://www.youtube.com/embed/${currentVideo.videoId}`}
+              frameBorder="0"
+              allowFullScreen
+            />
+            <Divider />
+            <h3>Nos ajude a melhorar a qualidade do conteúdo!</h3>
+            <p>O conteúdo pode ser aplicado na sua atividade?</p>
+            <Rate onChange={(value) => handleRateChange('applicability', value)} /><br />
+            <p>Teve facilidade para compreender o conteúdo apresentado?</p>
+            <Rate onChange={(value) => handleRateChange('understanding', value)} /><br />
+            <p>Pode te auxiliar a melhorar a forma como você desenvolve seu trabalho?</p>
+            <Rate onChange={(value) => handleRateChange('development', value)} /><br />
+            <p>Com esse conteúdo você poderá aumentar sua renda?</p>
+            <Rate onChange={(value) => handleRateChange('income', value)} /><br />
+            <p>Conseguiu identificar oportunidades depois de estudar os conteúdos?</p>
+            <Rate onChange={(value) => handleRateChange('opportunities', value)} /><br />
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              style={{ marginTop: '20px' }}
+            >
+              Enviar
+            </Button>
+          </div>
+        )}
+      </Modal>
+
+      {/* Modal para Documentos */}
+      <Modal
+        visible={isDocModalVisible}
+        onCancel={closeDocModal}
+        maskClosable={true}
+        width={800}
+        footer={null}
+      >
+        {currentDoc && (
+          <div style={{ textAlign: 'center' }}>
+            <h3>{currentDoc.originalFilename}</h3>
+            <Divider />
+            {renderDocContent(currentDoc)}
+            <br/><br/>
+            <Button
+              type="primary"
+              href={`${baseUrl}/uploads/${currentDoc.filename}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Baixar Documento
+            </Button>
+            <br/>
+          </div>
+        )}
+        <div style={{ textAlign: 'center' }}>
+            <Divider />
+            <h3>Nos ajude a melhorar a qualidade do conteúdo!</h3>
+            <p>O conteúdo pode ser aplicado na sua atividade?</p>
+            <Rate onChange={(value) => handleRateChange('applicability', value)} /><br />
+            <p>Teve facilidade para compreender o conteúdo apresentado?</p>
+            <Rate onChange={(value) => handleRateChange('understanding', value)} /><br />
+            <p>Pode te auxiliar a melhorar a forma como você desenvolve seu trabalho?</p>
+            <Rate onChange={(value) => handleRateChange('development', value)} /><br />
+            <p>Com esse conteúdo você poderá aumentar sua renda?</p>
+            <Rate onChange={(value) => handleRateChange('income', value)} /><br />
+            <p>Conseguiu identificar oportunidades depois de estudar os conteúdos?</p>
+            <Rate onChange={(value) => handleRateChange('opportunities', value)} /><br />
+            <Button
+              type="primary"
+              onClick={handleDocSubmit}
+              style={{ marginTop: '20px' }}
+            >
+              Enviar
+            </Button>
+        </div>
+      </Modal>
+
+      {/* Modal para Trilhas */}
+      <Modal
+        visible={isTrilhaModalVisible}
+        onCancel={closeTrilhaModal}
+        maskClosable={true}
+        footer={null}
+        width={800}
+      >
+        {currentTrilha && (
+          <div>
+            <h2>{currentTrilha.title}</h2>
+            <Divider />
+            {renderTrilhaContent(currentTrilha)}
+          </div>
+        )}
+      </Modal>
+
+      <h2>Vídeos de projetos</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+        {videos?.length > 0 ? (
           videos.map((video) => (
             <Card
+              key={video.uuid}
               hoverable
-              onClick={() => generateModal(video)}
-              style={{ width: 300, height: 270, marginBottom: 16 }}
-              cover={<img alt="example" src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${video.thumbnail}`} />}
-            >
-              <Meta title={video.title} />
-              {video.tags.map((tag) => (
-                <Badge
-                  className="badges-videos"
-                  count={tag.name}
-                  color={tag.color || "#f50"}
-                  style={{ marginRight: 4 }}
+              style={{ width: 300 }}
+              cover={
+                <img
+                  alt={video.title}
+                  src={
+                    video.thumbnail
+                      ? `${baseUrl}/uploads/${video.thumbnail}`
+                      : 'https://via.placeholder.com/300'
+                  }
                 />
-              ))}
+              }
+              onClick={() => openVideoModal(video)}
+            >
+              <Meta title={video.title}
+              description={
+                <>
+                  Criado em: {new Date(video.createdAt).toLocaleDateString('pt-BR')}
+                  <br />
+                  {video.project ? `Projeto: ${video.project.title}` : 'Projeto não definido'}
+                  
+                </>
+              } />
             </Card>
           ))
         ) : (
-          <h1>Carregando...</h1>
+          <p>Nenhum vídeo encontrado.</p>
         )}
       </div>
-    <Footer />
+
+      <Divider />
+
+      <h2>Documentos de projetos</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+        {docs?.length > 0 ? (
+          docs.map((doc) => (
+            <Card
+              key={doc.id}
+              hoverable
+              style={{ width: 300 }}
+              onClick={() => openDocModal(doc)}
+            >
+              <Meta
+                title={doc.originalFilename}
+                description={
+                  <>
+                    Criado em: {new Date(doc.createdAt).toLocaleDateString('pt-BR')}
+                    <br />
+                    {/* {doc.projectId || 'Projeto não definido'} */}
+                  </>
+                }
+              />
+            </Card>
+          ))
+        ) : (
+          <p>Nenhum documento encontrado.</p>
+        )}
+      </div>
+
+      <Divider />
+
+      <h2>Trilhas de Aprendizagem</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+        {trilhas?.length > 0 ? (
+          trilhas.map((trilha) =>
+            trilha.playlists.map((playlist) => (
+              <Card
+                key={playlist.id}
+                hoverable
+                style={{ width: 300 }}
+                onClick={() => openTrilhaModal(playlist)}
+              >
+                <Meta
+                  title={`Trilha: ${playlist.name}`}
+                  description={<>
+                    Criado em: {new Date(playlist.createdAt).toLocaleDateString('pt-BR')}
+                    <br />
+                    {`Projeto: ${trilha.title}` || 'Projeto não definido'}
+                  </>}
+                />
+              </Card>
+            ))
+          )
+        ) : (
+          <p>Nenhuma trilha encontrada.</p>
+        )}
+      </div>
+      <br/><br/><br/><br/><br/><br/><br/>
     </>
   );
 }

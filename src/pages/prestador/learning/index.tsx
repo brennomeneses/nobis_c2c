@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react';
-import { Breadcrumb, ConfigProvider, Layout, Menu, Statistic, theme } from 'antd';
+import { Breadcrumb, ConfigProvider, Layout, Menu, Popover } from 'antd';
 import styled from 'styled-components';
+//import Footer from '../../../components/prestador/footer';
 import logo from '../../../components/assets/logos/nobis_horizontal_branca.png';
 import { Outlet, redirect, useLocation, useNavigate } from 'react-router-dom';
 import baseUrl from '../../../components/assets/schemas/baseUrl';
+import { Link } from 'react-router-dom';
+import home from '../../../components/assets/icons/home.png';
+import chat from '../../../components/assets/icons/chat.png';
+import config from '../../../components/assets/icons/configuracoes.png';
+import broadcast from '../../../components/assets/icons/broadcast.png';
+import { HistoryOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer } = Layout;
 
@@ -46,26 +53,17 @@ const Dashboard: React.FC = () => {
     key: '/videos',
     label: 'Vídeos',
   }, {
-    key: 2,
+    key: '/comunicados',
     label: 'Learning',
-    children: [{
-      key: '/parceiro-digital/learning/videos',
-      label: 'Videos',
-    }, {
-      key: '/parceiro-digital/learning/playlists',
-      label: 'Trilhas de Aprendizado',
-    }, {
-      key: '../comunicados/',
-      label: 'Documentos',
-    }]
   }, {
-    key: '/parceiro-digital/mensageria',
+    key: '/comunicados',
     label: 'Mensagens',
   }].map((e) => ({ ...e, onClick: ({ key }) => navigate(key) }))
 
   const location = useLocation()
 
   return (
+    <>
     <ConfigProvider
       theme={{
         token: {
@@ -103,8 +101,19 @@ const Dashboard: React.FC = () => {
           </Breadcrumb>
           <Outlet />
         </Content>
+        <Footer style={{ backgroundColor: 'white', padding: "2% 0.5% 3.5% 0.5%", bottom: "0", position: "fixed", height: "50px", width: "100vw", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+          <div className='icons'>
+            <Popover content={"Página Inicial"}><Link to='/inicio'><img src={home} /></Link></Popover>
+            <Popover content={"Projetos"}><Link to='/learning'><img src={broadcast} /></Link></Popover>
+            <Popover content={"Chats de serviços"}><Link to='/chats'><img src={chat} /></Link></Popover>
+            <Popover content={"Histórico de serviços"}><Link to='/historico' style={{ color: "black", fontSize: "21px" }}><HistoryOutlined /></Link></Popover>
+            <Popover content={"Configurações"}><Link to='/configuracoes'><img src={config} /></Link></Popover>
+          </div>
+        </Footer>
       </Layout>
     </ConfigProvider>
+    
+    </>
   );
 };
 
