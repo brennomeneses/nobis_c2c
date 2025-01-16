@@ -50,10 +50,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const items = [{
-    key: '/videos',
-    label: 'Vídeos',
-  }, {
-    key: '/comunicados',
+    key: '/learning',
     label: 'Learning',
   }, {
     key: '/comunicados',

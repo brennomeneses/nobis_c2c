@@ -52,6 +52,13 @@ export default function MeusVideos() {
       const result = await response.json();
       console.log(result);
       alert('Avaliação enviada com sucesso!');
+      setRatings({
+        applicability: 0,
+        understanding: 0,
+        development: 0,
+        income: 0,
+        opportunities: 0,
+      });
       closeVideoModal();
     } catch (err) {
       console.error(err);
@@ -77,7 +84,14 @@ export default function MeusVideos() {
       const result = await response.json();
       console.log(result);
       alert('Avaliação enviada com sucesso!');
-      closeVideoModal();
+      setRatings({
+        applicability: 0,
+        understanding: 0,
+        development: 0,
+        income: 0,
+        opportunities: 0,
+      });
+      closeDocModal();
     } catch (err) {
       console.error(err);
       alert('Erro ao enviar a avaliação. Tente novamente.');
@@ -350,7 +364,41 @@ export default function MeusVideos() {
         )}
       </Modal>
 
+    
+      <Divider/>
+      <h2>Trilhas de Aprendizagem</h2>
+      <Divider/>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+        {trilhas?.length > 0 ? (
+          trilhas.map((trilha) =>
+            trilha.playlists.map((playlist) => (
+              <Card
+                key={playlist.id}
+                hoverable
+                style={{ width: 300 }}
+                onClick={() => openTrilhaModal(playlist)}
+              >
+                <Meta
+                  title={`Trilha: ${playlist.name}`}
+                  description={<>
+                    Criado em: {new Date(playlist.createdAt).toLocaleDateString('pt-BR')}
+                    <br />
+                    {`Projeto: ${trilha.title}` || 'Projeto não definido'}
+                  </>}
+                />
+              </Card>
+            ))
+          )
+        ) : (
+          <p>Nenhuma trilha encontrada.</p>
+        )}
+      </div>
+
+      <Divider />
+
       <h2>Vídeos de projetos</h2>
+
+      <Divider/>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
         {videos?.length > 0 ? (
           videos.map((video) => (
@@ -389,6 +437,7 @@ export default function MeusVideos() {
       <Divider />
 
       <h2>Documentos de projetos</h2>
+      <Divider/>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
         {docs?.length > 0 ? (
           docs.map((doc) => (
@@ -412,35 +461,6 @@ export default function MeusVideos() {
           ))
         ) : (
           <p>Nenhum documento encontrado.</p>
-        )}
-      </div>
-
-      <Divider />
-
-      <h2>Trilhas de Aprendizagem</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-        {trilhas?.length > 0 ? (
-          trilhas.map((trilha) =>
-            trilha.playlists.map((playlist) => (
-              <Card
-                key={playlist.id}
-                hoverable
-                style={{ width: 300 }}
-                onClick={() => openTrilhaModal(playlist)}
-              >
-                <Meta
-                  title={`Trilha: ${playlist.name}`}
-                  description={<>
-                    Criado em: {new Date(playlist.createdAt).toLocaleDateString('pt-BR')}
-                    <br />
-                    {`Projeto: ${trilha.title}` || 'Projeto não definido'}
-                  </>}
-                />
-              </Card>
-            ))
-          )
-        ) : (
-          <p>Nenhuma trilha encontrada.</p>
         )}
       </div>
       <br/><br/><br/><br/><br/><br/><br/>

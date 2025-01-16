@@ -22,7 +22,11 @@ const formatName = (nome: string) => {
   return nome; // Se só tiver um nome, retorna ele mesmo
 };
 
-const App: React.FC<AppProps> = ({ nome, foto, msg, uuid, rating, serviceUUID, status, date }) => (
+const App: React.FC<AppProps> = ({ nome, foto, msg, uuid, rating, serviceUUID, status, date }) => {
+
+  console.log('rating:', rating);
+  
+  return(
   <Link to={`/chat/${uuid}`} className="linkContainer">
     <div className="chatCard">
       <div className="chatCardContent">
@@ -35,10 +39,15 @@ const App: React.FC<AppProps> = ({ nome, foto, msg, uuid, rating, serviceUUID, s
         </div>
       </div>
       <div className="chatCardStatus">
-        {rating === "0" && status !== "active" ? (
-          <Button className="evaluateButton" onClick={() => window.location.href = `/avaliar-servico/${serviceUUID}`}>
-            Avaliar Serviço
-          </Button>
+        {parseInt(rating, 10) === 0 && status !== "completed" ? (
+          <>
+          <div style={{ textAlign: 'center' }}>
+            <Button className="evaluateButton" onClick={() => window.location.href = `/avaliar-servico/${serviceUUID}`}>
+              Avaliar Serviço
+            </Button>
+            <p className="statusText">Última mensagem enviada: {date}</p>
+          </div>
+          </>
         ) : status === "active" ? (
           <p className="statusText">Última mensagem enviada: {date}</p>
         ) : (
@@ -51,6 +60,7 @@ const App: React.FC<AppProps> = ({ nome, foto, msg, uuid, rating, serviceUUID, s
     </div>
     <Divider />
   </Link>
-);
+)
+};
 
 export default App;

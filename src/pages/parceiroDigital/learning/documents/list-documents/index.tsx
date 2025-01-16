@@ -1,10 +1,19 @@
-import { DownloadOutlined, FileExcelOutlined, FileImageOutlined, FileOutlined, FilePdfOutlined, FilePptOutlined, FileWordOutlined, FileZipOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, FloatButton, List, Modal, theme } from "antd";
+import { 
+  DownloadOutlined, 
+  FileExcelOutlined, 
+  FileImageOutlined, 
+  FileOutlined, 
+  FilePdfOutlined, 
+  FilePptOutlined, 
+  FileWordOutlined, 
+  FileZipOutlined, 
+  PlusOutlined 
+} from "@ant-design/icons";
+import { Button, Card, FloatButton, List, Modal, theme, message } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import baseUrl from "../../../../../components/assets/schemas/baseUrl";
 import styled from "styled-components";
-
 const TitleStyled = styled.div`
   text-overflow: clip;
   white-space: normal;
@@ -42,6 +51,34 @@ const Header = styled.div`
     }
   }
 `;
+
+const handleDelete = async () => {
+    if (!currentItem) return;
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/digital_partners/projects/${currentItem.filename}/documents`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        message.success("Documento excluído com sucesso!");
+        setData(data.filter((item) => item.filename !== currentItem.filename));
+        handleCancel();
+      } else {
+        message.error("Erro ao excluir o documento.");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Erro ao excluir o documento.");
+    }
+  };
 
 const ListDocuments = () => {
   const {
@@ -117,6 +154,34 @@ const ListDocuments = () => {
     );
   };
 
+  const handleDelete = async () => {
+    if (!currentItem) return;
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/digital_partners/projects/${currentItem.filename}/documents`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        message.success("Documento excluído com sucesso!");
+        setData(data.filter((item) => item.filename !== currentItem.filename));
+        handleCancel();
+      } else {
+        message.error("Erro ao excluir o documento.");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Erro ao excluir o documento.");
+    }
+  };
+
   return (
     <>
       <div
@@ -190,7 +255,14 @@ const ListDocuments = () => {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        footer={null}
+        footer={[
+          <Button key="cancel" onClick={handleCancel}>
+            Fechar
+          </Button>,
+          <Button key="delete" danger onClick={handleDelete}>
+            Excluir
+          </Button>,
+        ]}
         width={800}
       >
         <div>
