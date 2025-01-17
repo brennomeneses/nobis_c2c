@@ -8,7 +8,6 @@ type FieldType = {
   projects?: string;
 };
 
-
 const VideosContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
@@ -36,9 +35,11 @@ const CreatePlaylist = () => {
 
   const [form] = Form.useForm();
   const [selectedVideos, setSelectedVideos] = useState([]);
+  const [selectedDocuments, setSelectedDocuments] = useState([]);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
+  const [documents, setDocuments] = useState([]);
   const [project, setProject] = useState("");
   const [playlistName, setplaylistName] = "";
   const [projects, setProjects] = useState<SelectProps['options']>([]);
@@ -59,54 +60,67 @@ const CreatePlaylist = () => {
         setData(response)
       })
       .catch(err => console.error(err));
+
+      fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/file', options)
+      .then(response => response.json())
+      .then(response => setDocuments(response))
+      .catch(err => console.error(err));
   }, [])
 
-  const onFinish = (values) => {
-    setLoading(true)
-    console.log('Form Values:', values);
-
+  const onFinish = values => {
+    setLoading(true);
+  
+    const payload = {
+      name: values.playlistName,
+      projects: project, // Projetos selecionados
+      videos: selectedVideos, // UUIDs dos vídeos selecionados
+      tags: values.tags || [], // Tags selecionadas
+      files: selectedDocuments, // UUIDs dos documentos selecionados
+    };
+  
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        name: values.playlistName,
-        videos: values.videos,
-        tags: values.tags
-      })
+      body: JSON.stringify(payload),
     };
-    fetch(`${baseUrl}/digital_partners/projects/${project}/playlist`, options)
-    .then(response => {
-      if (response.status === 200) {
-        return response.json(); // Processar o corpo da resposta
-      } else {
-        throw new Error(`Erro HTTP: ${response.status}`);
-      }
-    })
-    .then(responseData => {
-      notification.success({
-        message: 'Sucesso!',
-        description: 'Playlist criada com sucesso!',
-        placement: 'topRight',
+  
+    fetch(`${baseUrl}/digital_partners/projects/post/playlist`, options)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json(); // Processar o corpo da resposta
+        } else {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+      })
+      .then(responseData => {
+        notification.success({
+          message: 'Sucesso!',
+          description: 'Playlist criada com sucesso!',
+          placement: 'topRight',
+        });
+        navigate("/parceiro-digital/learning/playlists");
+      })
+      .catch(err => {
+        notification.error({
+          message: 'Erro!',
+          description: `Não foi possível criar a playlist: ${err.message}`,
+          placement: 'topRight',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      navigate("/parceiro-digital/learning/playlists");
-    })
-    .catch(err => {
-      notification.error({
-        message: 'Erro!',
-        description: `Não foi possível criar a playlist: ${err.message}`,
-        placement: 'topRight',
-      });
-    })
-    .finally(() => {
-      setLoading(false);
-    });    
-  };
+  };  
 
   const onVideoChange = (checkedValues) => {
     setSelectedVideos(checkedValues);
+  };
+
+  const onDocumentChange = (checkedValues) => {
+    setSelectedDocuments(checkedValues);
   };
 
   useEffect(() => {
@@ -244,6 +258,44 @@ const CreatePlaylist = () => {
                           />))}
                       </div>
 
+                    </div>
+                  </List.Item>
+                )}
+              />
+            </Checkbox.Group>
+          </Form.Item>
+
+          <Form.Item
+            name="documents"
+            label="Documentos"
+            style={{
+              width: "100%",
+            }}
+            rules={[{ required: true, message: 'Por favor selecione pelo menos um documento!' }]}>
+            <Checkbox.Group
+              onChange={onDocumentChange}
+              value={selectedDocuments}
+            >
+              <List
+                style={{
+                  width: "100%",
+                }}
+                dataSource={documents}
+                renderItem={doc => (
+                  <List.Item
+                    key={doc.filename}
+                    style={{
+                      width: '100%',
+                      justifyContent: 'inherit',
+                    }}
+                  >
+                    <Checkbox value={doc.filename}></Checkbox>
+                    <div
+                      style={{
+                        margin: "0 20px 0 20px",
+                      }}
+                    >
+                      <h3>{doc.name} - {doc.originalFilename}</h3>
                     </div>
                   </List.Item>
                 )}

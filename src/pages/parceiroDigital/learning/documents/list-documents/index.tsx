@@ -52,34 +52,6 @@ const Header = styled.div`
   }
 `;
 
-const handleDelete = async () => {
-    if (!currentItem) return;
-
-    try {
-      const response = await fetch(
-        `${baseUrl}/digital_partners/projects/${currentItem.filename}/documents`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        message.success("Documento excluído com sucesso!");
-        setData(data.filter((item) => item.filename !== currentItem.filename));
-        handleCancel();
-      } else {
-        message.error("Erro ao excluir o documento.");
-      }
-    } catch (error) {
-      console.error(error);
-      message.error("Erro ao excluir o documento.");
-    }
-  };
-
 const ListDocuments = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -263,12 +235,15 @@ const ListDocuments = () => {
             Excluir
           </Button>,
         ]}
-        width={800}
+        width={"90%"}
+        style={{
+          top: 50
+        }}
       >
         <div>
           <iframe
             src={`${baseUrl}/uploads/${currentItem?.filename}`}
-            style={{ width: "100%", height: "400px" }}
+            style={{ width: "100%", height: "600px" }}
             title={currentItem?.originalFilename}
           ></iframe>
         </div>

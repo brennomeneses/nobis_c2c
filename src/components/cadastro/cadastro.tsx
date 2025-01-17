@@ -48,6 +48,7 @@ const RegistrationForm = () => {
   
     try {
       setLoading(true);
+  
       const response = await fetch(`${baseUrl}/users/into/project/${projectCode}`, {
         method: 'PUT',
         headers: {
@@ -58,22 +59,25 @@ const RegistrationForm = () => {
       });
   
       if (response.ok) {
-        // Tente interpretar a resposta como JSON, mas trate respostas que não são JSON
-        let data;
-        try {
-          data = await response.json();
+        const contentType = response.headers.get('content-type');
+        
+        // Identifique o formato da resposta
+        let responseBody: any;
+        if (contentType && contentType.includes('application/json')) {
+          responseBody = await response.json(); // Leia como JSON
           message.success("Você entrou no projeto com sucesso!");
-          console.log("Resposta do servidor:", data);
-        } catch {
-          const text = await response.text();
-          message.success(`Você entrou no projeto com sucesso! Resposta: ${text}`);
+          console.log("Resposta do servidor (JSON):", responseBody);
+        } else {
+          responseBody = await response.text(); // Leia como texto
+          message.success(`Você entrou no projeto com sucesso!`);
+          console.log("Resposta do servidor (Texto):", responseBody);
         }
+  
         setIsProjectModalVisible(false);
         setLoading(false);
         setProjectCode('');
         navigate('/inicio/');
       } else {
-        // Erro com a resposta do servidor
         const errorText = await response.text();
         setLoading(false);
         message.error(`Erro: ${errorText || "Falha ao entrar no projeto."}`);
@@ -84,6 +88,7 @@ const RegistrationForm = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');

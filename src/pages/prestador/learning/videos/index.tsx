@@ -43,7 +43,7 @@ export default function MeusVideos() {
       },
       body: JSON.stringify(ratings),
     };
-
+  
     try {
       const response = await fetch(
         `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/videos/rate/${currentVideo.videoUuid}`,
@@ -52,6 +52,8 @@ export default function MeusVideos() {
       const result = await response.json();
       console.log(result);
       alert('Avaliação enviada com sucesso!');
+      
+      // Resetando as classificações para garantir que o Rate visual seja limpo
       setRatings({
         applicability: 0,
         understanding: 0,
@@ -59,12 +61,15 @@ export default function MeusVideos() {
         income: 0,
         opportunities: 0,
       });
-      closeVideoModal();
+  
+      // Recarregar a página após o envio da avaliação
+      window.location.reload();
     } catch (err) {
       console.error(err);
       alert('Erro ao enviar a avaliação. Tente novamente.');
     }
   };
+  
 
   const handleDocSubmit = async () => {
     const options = {
@@ -75,7 +80,7 @@ export default function MeusVideos() {
       },
       body: JSON.stringify(ratings),
     };
-
+  
     try {
       const response = await fetch(
         `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/documents/rate/${currentDoc.docUuid}`,
@@ -91,7 +96,8 @@ export default function MeusVideos() {
         income: 0,
         opportunities: 0,
       });
-      closeDocModal();
+      window.location.reload();
+
     } catch (err) {
       console.error(err);
       alert('Erro ao enviar a avaliação. Tente novamente.');
@@ -144,7 +150,15 @@ export default function MeusVideos() {
   const closeVideoModal = () => {
     setIsVideoModalVisible(false);
     setCurrentVideo(null);
+    setRatings({
+      applicability: 0,
+      understanding: 0,
+      development: 0,
+      income: 0,
+      opportunities: 0,
+    });
   };
+  
 
   const openDocModal = (doc) => {
     setCurrentDoc({ doc, docUuid: doc.filename }); // Enviando um único objeto
@@ -154,13 +168,20 @@ export default function MeusVideos() {
   const closeDocModal = () => {
     setIsDocModalVisible(false);
     setCurrentDoc(null);
+    setRatings({
+      applicability: 0,
+      understanding: 0,
+      development: 0,
+      income: 0,
+      opportunities: 0,
+    });
   };
   
 
   const renderDocContent = (doc) => {
-    const fileUrl = `${baseUrl}/uploads/${doc.filename}`;
-    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(doc.filename);
-    const isPdf = /\.pdf$/i.test(doc.filename);
+    const fileUrl = `${baseUrl}/uploads/${doc.doc.filename}`;
+    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(doc.doc.filename);
+    const isPdf = /\.pdf$/i.test(doc.doc.filename);
 
     if (isImage) {
       return <img src={fileUrl} alt={doc.originalFilename} style={{ width: '100%', maxHeight: '500px', objectFit: 'contain' }} />;
@@ -196,7 +217,6 @@ export default function MeusVideos() {
       <>
         {trilha?.videos?.length > 0 ? (
           <div key={trilha.id}>
-            <h3>{trilha.name}</h3>
             <h4>Vídeos</h4>
             {trilha.videos.map((video) => (
               <Card
@@ -211,6 +231,7 @@ export default function MeusVideos() {
                         ? `${baseUrl}/uploads/${video.thumbnail}`
                         : 'https://via.placeholder.com/300'
                     }
+                    style={{ height: '400px', objectFit: 'cover' }}
                     onClick={() => {
                       openVideoModal(video);
                       closeTrilhaModal();
@@ -312,7 +333,7 @@ export default function MeusVideos() {
             <h3>{currentDoc.originalFilename}</h3>
             <Divider />
             {renderDocContent(currentDoc)}
-            <br/><br/>
+            <br/>
             <Button
               type="primary"
               href={`${baseUrl}/uploads/${currentDoc.filename}`}
@@ -354,6 +375,7 @@ export default function MeusVideos() {
         maskClosable={true}
         footer={null}
         width={800}
+        title={currentTrilha?.name || "Detalhes da Trilha"}
       >
         {currentTrilha && (
           <div>
@@ -414,6 +436,7 @@ export default function MeusVideos() {
                       ? `${baseUrl}/uploads/${video.thumbnail}`
                       : 'https://via.placeholder.com/300'
                   }
+                  style={{cursor: 'pointer', height: '150px', objectFit: 'cover'}}
                 />
               }
               onClick={() => openVideoModal(video)}
