@@ -27,7 +27,7 @@ interface EnviarProps {
 }
 
 const App: React.FC<EnviarProps> = ({ status, inputValue, setInputValue }) => {
-  const [userFile, setUserFile] = useState<UploadFile | null>(null);
+  const [userFile, setUserFile] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [messageToSend, setMessageToSend] = useState<FieldType | null>(null);
@@ -93,7 +93,7 @@ const App: React.FC<EnviarProps> = ({ status, inputValue, setInputValue }) => {
     onChange(info) {
       setLoading(true);
       if (info.file.status === 'done') {
-        setUserFile(info.file);
+        setUserFile(info.file.response);
         setLoading(false);
       } else if (info.file.status === 'error') {
         message.error(`Erro ao anexar ${info.file.name}. Por favor, tente novamente.`);
