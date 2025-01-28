@@ -167,7 +167,7 @@ export default function Inicio() {
         {userData && (
           <FixedHeader
             nome={userData.fullName}
-            foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${userData.avatar}`}
+            foto={`${baseUrl}/uploads/${userData.avatar}`}
             loggedUserName={userData.nameClient}
           />
         )}

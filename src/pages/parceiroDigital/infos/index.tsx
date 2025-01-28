@@ -38,7 +38,7 @@ const CopyLinkButton = ({ link }: { link: string }) => {
 const Infos = () => {
   const [dashboard, setDashboard] = useState<null | any>(null);
   const [projects, setProjects] = useState([]); // Estado para armazenar os projetos
-  const [selectedProjectUuid, setSelectedProjectUuid] = useState(null); // Estado para armazenar o uuid do projeto selecionado
+  const [selectedProjectUuid, setSelectedProjectUuid] = useState("general"); // Estado para armazenar o uuid do projeto selecionado
 
   const dashboardFields = ['age', 'payments', 'totalServicesStatus', 'genre', 'deficiency', 'lookingForJob', 'nationatity', 'scholarship', 'familySize']
 
@@ -168,6 +168,9 @@ const Infos = () => {
       value={selectedProjectUuid} // Define o valor atual selecionado
       onChange={(value) => setSelectedProjectUuid(value)} // Atualiza o estado quando o usuário seleciona
     >
+      <Option key={0} value={"general"}>
+          Geral
+      </Option>
       {projects.map((project: { id: number; title: string; uuid: string }) => (
         <Option key={project.id} value={project.uuid}>
           {project.title}

@@ -104,7 +104,7 @@ export default function Inicio() {
       }
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/room/${uuid}/status`, options)
+    fetch(`${baseUrl}/services/room/${uuid}/status`, options)
       .then(response => response.json())
       .then(data => {
         setserviceUUID(data.service.uuid);
@@ -181,7 +181,7 @@ export default function Inicio() {
   return (<>
     <Container className='containerChat'>
       {userData && (
-        <FixedHeader onClick={fecharChat} nome={userData.fullName} foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${userData.avatar}`} status={userData.status} uuid={userData.uuid} loggedUserName={userData.prestadorName} />
+        <FixedHeader onClick={fecharChat} nome={userData.fullName} foto={`${baseUrl}/uploads/${userData.avatar}`} status={userData.status} uuid={userData.uuid} loggedUserName={userData.prestadorName} />
       )}
       {!finalizarVisible ? (
         <>
