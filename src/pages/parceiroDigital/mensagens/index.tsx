@@ -59,34 +59,67 @@ const Mensageria = () => {
     };
 
     try {
-      const usersFromProjects = await Promise.all(
-        projectIds.map(async (projectId) => {
-          const response = await fetch(
-            `${baseUrl}/digital_partners/projects/${projectId}`,
-            options
-          );
-          const projectData = await response.json();
-          return projectData.users || [];
-        })
+      if (!projectIds || !projectIds.length) {
+        setUsers([]);
+        return;
+      }
+    
+      const projectId = projectIds; // Considera apenas o primeiro projeto
+      const response = await fetch(
+        `${baseUrl}/digital_partners/projects/${projectId}`,
+        options
       );
-
-      const allUsers = usersFromProjects.flat();
+    
+      const projectData = await response.json();
+      const users = projectData.users || [];
+    
       const uniqueUsers = Array.from(
         new Map(
-          allUsers.map((user: Record<string, string>) => [user.uuid, user])
+          users.map((user: Record<string, string>) => [user.uuid, user])
         ).values()
       );
-
+    
       setUsers(
         uniqueUsers.map((user) => ({
           label: user.fullName,
-          value: user.uuid
+          value: user.uuid,
         }))
       );
     } catch (err) {
       console.error(err);
     }
   };
+    
+
+  //   try {
+  //     const usersFromProjects = await Promise.all(
+  //       projectIds.map(async (projectId) => {
+  //         const response = await fetch(
+  //           `${baseUrl}/digital_partners/projects/${projectId}`,
+  //           options
+  //         );
+  //         const projectData = await response.json();
+  //         return projectData.users || [];
+  //       })
+  //     );
+
+  //     const allUsers = usersFromProjects.flat();
+  //     const uniqueUsers = Array.from(
+  //       new Map(
+  //         allUsers.map((user: Record<string, string>) => [user.uuid, user])
+  //       ).values()
+  //     );
+
+  //     setUsers(
+  //       uniqueUsers.map((user) => ({
+  //         label: user.fullName,
+  //         value: user.uuid
+  //       }))
+  //     );
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
@@ -171,7 +204,7 @@ const Mensageria = () => {
           >
             <Select
               allowClear
-              mode="multiple"
+              //mode="multiple"
               notFoundContent="Nenhum projeto encontrado"
               style={{ width: '100%' }}
               placeholder="Selecione os projetos"
@@ -180,6 +213,7 @@ const Mensageria = () => {
                 if (value.length > 0) {
                   fetchUsersByProjects(value);
                   setProjectIdMsg(value);
+                  console.log(value);
                 } else {
                   setUsers([]);
                 }
@@ -192,19 +226,31 @@ const Mensageria = () => {
             name="users"
             rules={[{ required: true, message: 'Selecione ao menos um prestador' }]}
           >
-            <Select
-              allowClear
-              mode="multiple"
-              notFoundContent="Nenhum prestador associado aos projetos selecionados"
-              style={{ width: '100%' }}
-              placeholder="Selecione os prestadores"
-              value={selectedUsers}
-              options={users}
-              onChange={(value) => {
-                setSelectedUsers(value);
-                form.setFieldsValue({ users: value });
-              }}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Select
+                allowClear
+                mode="multiple"
+                notFoundContent="Nenhum prestador associado aos projetos selecionados"
+                style={{ width: '100%' }}
+                placeholder="Selecione os prestadores"
+                value={selectedUsers}
+                options={users}
+                onChange={(value) => {
+                  setSelectedUsers(value);
+                  form.setFieldsValue({ users: value });
+                }}
+              />
+              <Button
+                type="primary"
+                onClick={() => {
+                  const allUserIds = users.map((user) => user.value); // Obtém os valores de todas as opções
+                  setSelectedUsers(allUserIds);
+                  form.setFieldsValue({ users: allUserIds });
+                }}
+              >
+                Selecionar Todos
+              </Button>
+            </div>
           </Form.Item>
 
           <Form.Item<FieldType>

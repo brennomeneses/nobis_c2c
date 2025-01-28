@@ -115,10 +115,12 @@ export default function Inicio() {
           </>
         ) : (<></>)}
         <br />
-        {dadosPrestador.digitalPartners && dadosPrestador.digitalPartners.length > 0 && (
+        {dadosPrestador.projects && dadosPrestador.projects.length > 0 && (
           <>
-            <h3>Empresas Afiliadas</h3>
-            <Afiliacoes partners={dadosPrestador.digitalPartners} />
+            <h3>Afiliações a Projetos</h3>
+            <Afiliacoes partners={[
+        ...new Map(dadosPrestador.projects.map((p) => [p.id, p])).values(),
+      ]} />
             <br />
           </>
         )}

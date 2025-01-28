@@ -330,13 +330,13 @@ export default function MeusVideos() {
       >
         {currentDoc && (
           <div style={{ textAlign: 'center' }}>
-            <h3>{currentDoc.originalFilename}</h3>
+            <h3>{currentDoc.doc.originalFilename}</h3>
             <Divider />
             {renderDocContent(currentDoc)}
             <br/>
             <Button
               type="primary"
-              href={`${baseUrl}/uploads/${currentDoc.filename}`}
+              href={`${baseUrl}/uploads/${currentDoc.doc.filename}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -405,9 +405,9 @@ export default function MeusVideos() {
                   description={<>
                     Criado em: {new Date(playlist.createdAt).toLocaleDateString('pt-BR')}
                     <br />
-                    {`Projeto: ${trilha.title}` || 'Projeto não definido'}
                   </>}
                 />
+                {<strong>Projeto: {trilha.title}</strong> || 'Projeto não definido'}
               </Card>
             ))
           )
@@ -446,10 +446,9 @@ export default function MeusVideos() {
                 <>
                   Criado em: {new Date(video.createdAt).toLocaleDateString('pt-BR')}
                   <br />
-                  {video.project ? `Projeto: ${video.project.title}` : 'Projeto não definido'}
-                  
                 </>
               } />
+              {video.project ? <strong>Projeto: {video.project.title}</strong> : 'Projeto não definido'}
             </Card>
           ))
         ) : (
@@ -469,6 +468,7 @@ export default function MeusVideos() {
               hoverable
               style={{ width: 300 }}
               onClick={() => openDocModal(doc)}
+              title={doc.name}
             >
               <Meta
                 title={doc.originalFilename}

@@ -35,7 +35,7 @@ import NovoVideo from './pages/parceiroDigital/learning/video/novo-video/novo-vi
 import EditarVideo from './pages/parceiroDigital/learning/video/editar-video/editar-video';
 import CreatePlaylist from './pages/parceiroDigital/learning/playlist';
 import Cadastrar from './pages/parceiroDigital/cadastrar';
-import Comunicados from './pages/prestador/comunicados';
+import Comunicados from './pages/prestador/learning/comunicados';
 import MeusVideos from './pages/parceiroDigital/meus-videos';
 import Playlists from './pages/parceiroDigital/minhas-playlists';
 import Documents from './pages/parceiroDigital/learning/documents';
@@ -188,10 +188,6 @@ const Routes: React.FC = () => {
       element: <CriarPost />
     },
     {
-      path: "/comunicados",
-      element: <Comunicados />
-    },
-    {
       path: "/parceiro-digital",
       element: <Dashboard />,
       loader: useAuthDigitalPartner,
@@ -270,6 +266,10 @@ const Routes: React.FC = () => {
         {
           path: "learning/documentos",
           element: <ListDocuments />
+        },
+        {
+          path: "learning/comunicados",
+          element: <Comunicados />
         }
       ]
     },
