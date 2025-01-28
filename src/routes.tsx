@@ -40,6 +40,8 @@ import MeusVideos from './pages/parceiroDigital/meus-videos';
 import Playlists from './pages/parceiroDigital/minhas-playlists';
 import Documents from './pages/parceiroDigital/learning/documents';
 import ListDocuments from './pages/parceiroDigital/learning/documents/list-documents';
+import Transparencia from './pages/parceiroDigital/transparencia';
+import EDTransparencia from './pages/parceiroDigital/transparencia/enviar-documento';
 import Cartao from './pages/cartao';
 import VideosPrestador from './pages/prestador/videos';
 import CompraCreditos from './pages/prestador/compra-creditos';
@@ -203,6 +205,14 @@ const Routes: React.FC = () => {
         {
           path: "mensageria",
           element: <Mensageria />
+        },
+        {
+          path: "transparencia",
+          element: <Transparencia />
+        },
+        {
+          path: "transparencia/enviar-documentos",
+          element: <EDTransparencia />
         },
         {
           path: "criar-projeto",
