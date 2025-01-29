@@ -66,6 +66,9 @@ const Dashboard: React.FC = () => {
     key: '/parceiro-digital/criar-projeto',
     label: 'Novo Projeto',
   }, {
+    key: '/parceiro-digital/transparencia',
+    label: 'Transparência',
+  }, {
     key: '/parceiro-digital/logout',
     label: 'Sair',
   }].map((e) => ({ ...e, onClick: ({ key }) => navigate(key) }))
