@@ -48,12 +48,14 @@ const Documents = () => {
   }, [token]);
 
   const onFinish = (values) => {
-    console.log(values)
+    // console.log(values)
     const formData = new FormData();
-    formData.append('file', values.upload.file);
     formData.append('description', values.name)
+    formData.append('category', values.category);
+    formData.append('projectUuids', values.projects);
+    formData.append('files', values.upload.file);
 
-    console.log(formData.get("file"))
+    console.log(formData.get("files"))
 
     const options = {
       method: 'POST',
@@ -63,7 +65,7 @@ const Documents = () => {
       body: formData
     };
 
-    fetch(`${baseUrl}/digital_partners/projects/${projectUuid}/documents`, options)
+    fetch(`${baseUrl}/digital_partners/transparency`, options)
       .then(response => response.json())
       .then(response => {sucessNotification(response.originalFilename);
         navigate("/parceiro-digital/learning/documentos");

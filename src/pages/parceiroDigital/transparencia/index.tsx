@@ -1,4 +1,5 @@
 import { 
+  DeleteOutlined,
     DownloadOutlined, 
     FileExcelOutlined, 
     FileImageOutlined, 
@@ -9,30 +10,15 @@ import {
     FileZipOutlined, 
     PlusOutlined 
   } from "@ant-design/icons";
-  import { Button, Card, FloatButton, List, Modal, theme, message } from "antd";
+  import { Button, Card, FloatButton, List, Modal, theme, message, Table, TableColumnsType, Tag, Collapse } from "antd";
   import { useEffect, useState } from "react";
   import { Link } from "react-router-dom";
-  import baseUrl from "../../../../../components/assets/schemas/baseUrl";
   import styled from "styled-components";
-  const TitleStyled = styled.div`
-    text-overflow: clip;
-    white-space: normal;
-    word-break: break-word;
-    width: 70%;
-    font-size: 14px;
-  
-    &:hover {
-      text-overflow: clip;
-      white-space: normal;
-      word-break: break-word;
-    }
-  `;
-  
-  const MobileButtom = styled.div`
-    @media (min-width: 768px) {
-      display: none;
-    }
-  `;
+import baseUrl from "../../../components/assets/schemas/baseUrl";
+
+const { Panel } = Collapse;
+
+
   
   const Header = styled.div`
     width: 100%;
@@ -53,11 +39,102 @@ import {
   `;
   
   const ListDocuments = () => {
+    const [dataSource, setDataSource] = useState([]);
+
+    const token = localStorage.getItem("digitalPartnerToken");
+
+    useEffect(() => {
+
+      const options = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      fetch(`${baseUrl}/digital_partners/transparency`, options)
+        .then(response => response.json())
+        .then(response => setDataSource(response))
+        .catch(err => console.error(err));
+    }, [])
+
     const {
       token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-  
-    const token = localStorage.getItem("digitalPartnerToken");
+
+    const columns: TableColumnsType<any> = [
+      {
+        title: 'Descrição',
+        dataIndex: 'description',
+        key: 'description',
+        responsive: ['lg'],
+      },
+      {
+        title: 'Descrição',
+        dataIndex: 'description',
+        key: 'description_mobile',
+        responsive: ['xs'],
+        render: (_, record) => (
+          <div>
+            {record.description} <br/>
+            {record.projects.map((project: any) => (
+              <Tag key={project.id}>{project.title}</Tag>
+            ))}
+            <p>Postado em: {new Date(record.createdAt).toLocaleString()}</p>
+          </div>
+        )
+      },
+      {
+        title: 'Categoria',
+        dataIndex: 'category',
+        key: 'category',
+        responsive: ['md'],
+      },
+      {
+        title: 'Postado em',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        responsive: ['md'],
+        render: (_, record) => (
+          <div>
+            {new Date(record.createdAt).toLocaleString()}
+          </div>
+        )
+      },
+      {
+        title: 'Projetos',
+        dataIndex: 'projects',
+        key: 'projects',
+        responsive: ['md'],
+        render: (_, record) => (
+          <div>
+            {record.projects.map((project: any) => (
+              <Tag key={project.id}>{project.title}</Tag>
+            ))}
+          </div>
+        ),
+      },
+      {
+        title: 'Arquivos',
+        dataIndex: 'uuid',
+        key: 'files',
+        render: (_, record) => (
+          <>
+          <Collapse>
+            <Panel header="Arquivos"  key="1">
+              {record.files.map((file: { id: number; filename: string; originalFilename: string }) => (
+                <div key={file.id}>
+                  <a href={`${baseUrl}/uploads/${file.filename}`} download={file.originalFilename} target="_blank" rel="noopener noreferrer">
+                    <FileOutlined /> {file.originalFilename}
+                  </a>
+                </div>
+              ))}
+          </Panel>
+        </Collapse>
+        </>
+        ),
+      },
+    ];
   
     return (
       <>
@@ -80,6 +157,7 @@ import {
                     </Button>
                 </Link>
             </Header>
+            <Table  dataSource={dataSource} columns={columns} />
         </div>
       </>
     );
