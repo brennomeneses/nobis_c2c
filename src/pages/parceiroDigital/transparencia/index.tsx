@@ -1,16 +1,8 @@
 import { 
-  DeleteOutlined,
-    DownloadOutlined, 
-    FileExcelOutlined, 
-    FileImageOutlined, 
     FileOutlined, 
-    FilePdfOutlined, 
-    FilePptOutlined, 
-    FileWordOutlined, 
-    FileZipOutlined, 
     PlusOutlined 
   } from "@ant-design/icons";
-  import { Button, Card, FloatButton, List, Modal, theme, message, Table, TableColumnsType, Tag, Collapse } from "antd";
+  import { Button, theme, Table, TableColumnsType, Tag, Collapse } from "antd";
   import { useEffect, useState } from "react";
   import { Link } from "react-router-dom";
   import styled from "styled-components";

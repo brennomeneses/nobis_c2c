@@ -1,11 +1,16 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, theme, Upload, Form, Input, UploadFile, Select, notification } from "antd";
 import { useState, useEffect } from "react";
-import type { GetProp, UploadProps, SelectProps } from 'antd';
+import type { SelectProps } from 'antd';
 import baseUrl from "../../../../components/assets/schemas/baseUrl";
 import { useNavigate } from 'react-router-dom';
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+type FormType = {
+  name: string;
+  category: string;
+  projects: string[];
+  upload: any;
+}
 
 type FieldType = {
   projects?: string[];
@@ -47,12 +52,13 @@ const Documents = () => {
       .catch(err => console.error(err));
   }, [token]);
 
-  const onFinish = (values) => {
-    // console.log(values)
+  const onFinish = (values: FormType) => {
+    console.log(values)
+    console.log(typeof values.projects)
     const formData = new FormData();
     formData.append('description', values.name)
     formData.append('category', values.category);
-    formData.append('projectUuids', values.projects);
+    formData.append('projectsUuids', JSON.stringify(values.projects));
     formData.append('files', values.upload.file);
 
     console.log(formData.get("files"))
@@ -67,17 +73,10 @@ const Documents = () => {
 
     fetch(`${baseUrl}/digital_partners/transparency`, options)
       .then(response => response.json())
-      .then(response => {sucessNotification(response.originalFilename);
-        navigate("/parceiro-digital/learning/documentos");
+      .then(response => {
+        navigate("/parceiro-digital/transparencia");
       })
       .catch(err => failNotification());
-  };
-
-  const sucessNotification = (filename: string) => {
-    api.success({
-      message: 'Arquivo enviado com sucesso!',
-      description: `Arquivo ${filename} foi enviado com sucesso`,
-    });
   };
 
   const failNotification = () => {

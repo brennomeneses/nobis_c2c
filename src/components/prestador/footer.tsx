@@ -31,7 +31,7 @@ const Footer = () => (
   </div>
 )
 
-const App: React.FC = () => {
+const ResponsiveFooter: React.FC = () => {
   /*
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -59,4 +59,4 @@ const App: React.FC = () => {
   )
 };
 
-export default App;
+export default ResponsiveFooter;

@@ -38,7 +38,6 @@ export default function Comunicados() {
     const options = {
       method: 'GET',
       headers: {
-        'User-Agent': 'insomnia/10.1.1',
         Authorization: `Bearer ${authToken}`,
       },
     };
