@@ -34,7 +34,6 @@ export default function Comunicados() {
     const options = {
       method: 'GET',
       headers: {
-        'User-Agent': 'insomnia/10.1.1',
         Authorization: `Bearer ${authToken}`,
       },
     };
@@ -93,7 +92,7 @@ export default function Comunicados() {
   const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = (panelStyle) =>
     filteredData.map((msg, i) => {
       const content = msg.message || 'Conteúdo não disponível';
-      const projectName = msg.project?.title || 'Projeto não especificado';
+      const projectName = msg.project?.title || msg.projects.map((project) => project.title).join(', ') || 'Projeto não especificado';
 
       return {
         key: i,
@@ -115,7 +114,7 @@ export default function Comunicados() {
               {msg.files?.map((file, index) => (
                 <React.Fragment key={index}>
                   <a
-                    href={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${file.filename}`}
+                    href={`${baseUrl}/uploads/${file.filename}`}
                     target='_blank'
                   >
                     {file.originalFilename}

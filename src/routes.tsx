@@ -52,6 +52,7 @@ import FAQ from './pages/faq';
 import ForgotPassword from './pages/forgot-password';
 import LearningIndex from './pages/prestador/learning';
 import PrestadorVideos from './pages/prestador/learning/videos';
+import TransparenciaPrestador from './pages/prestador/transparencia';
 
 
 const Routes: React.FC = () => {
@@ -282,6 +283,10 @@ const Routes: React.FC = () => {
           element: <Comunicados />
         }
       ]
+    },
+    {
+      path: "/transparencia",
+      element: <TransparenciaPrestador />
     },
     {
       path: "/parceiro-digital/login",

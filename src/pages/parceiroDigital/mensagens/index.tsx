@@ -128,11 +128,12 @@ const Mensageria = () => {
 
     const formData = new FormData();
     formData.append("targetsString", JSON.stringify(values.users));
-    formData.append("subject", values.subject);
-    formData.append("content", values.message);
+    formData.append("projectsUuid", JSON.stringify(values.projects));
+    formData.append("subject", values.subject ?? "");
+    formData.append("content", values.message ?? "");
 
     if (values.files) {
-      values.files.fileList.forEach((file) => {
+      values.files.fileList.forEach((file: { originFileObj: string | Blob; }) => {
         formData.append("files", file.originFileObj);
       });
     }
@@ -147,7 +148,7 @@ const Mensageria = () => {
 
     try {
       const response = await fetch(
-        `${baseUrl}/digital_partners/projects/${projectIdMsg}/messages`,
+        `${baseUrl}/digital_partners/messages/broadcast/v2`,
         options
       );
       const data = await response.json();
