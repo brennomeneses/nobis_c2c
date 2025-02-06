@@ -3,11 +3,8 @@ import { Collapse, theme, Select, Typography } from 'antd';
 import type { CollapseProps } from 'antd';
 import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
-import Footer from '../../../components/prestador/footer';
-import Header from '../../../components/prestador/index/header';
-import { useMediaQuery } from 'react-responsive';
-import HeaderMobile from '../../../components/prestador/index/headerMobile';
-import baseUrl from '../../../components/assets/schemas/baseUrl';
+import { Outlet } from 'react-router-dom';
+import baseUrl from '../../../../components/assets/schemas/baseUrl';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -22,7 +19,6 @@ export default function Comunicados() {
   const [projects, setProjects] = React.useState([]);
   const [selectedProject, setSelectedProject] = React.useState('all');
 
-  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const { token } = theme.useToken();
 
   const authToken = localStorage.getItem('authToken');
@@ -75,7 +71,7 @@ export default function Comunicados() {
     }
 
     const urlPattern =
-      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]|\b[-A-Z0-9+&@#\/%?=~_|!:,.;]+[.][a-z]{2,}\b)/gi;
+      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/\%?=~_|!:,.;]*[-A-Z0-9+&@#\/\%=~_|]|\b[-A-Z0-9+&@#\/\%?=~_|!:,.;]+[.][a-z]{2,}\b)/gi;
 
     return text.split(urlPattern).map((part, index) =>
       urlPattern.test(part) ? (
@@ -135,9 +131,8 @@ export default function Comunicados() {
 
   return (
     <>
-      {isMobile ? <HeaderMobile /> : <Header />}
       <BodyContainer>
-        <div className="container">
+        <div className="container" style={{ marginTop: "-5%" }}>
           <Title level={2}>Mensagens do parceiro digital</Title>
           <div style={{ marginBottom: 16 }}>
             <Select
@@ -169,7 +164,6 @@ export default function Comunicados() {
           )}
         </div>
       </BodyContainer>
-      <Footer />
     </>
   );
 }

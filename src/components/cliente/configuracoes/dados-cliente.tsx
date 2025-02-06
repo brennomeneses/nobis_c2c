@@ -35,7 +35,7 @@ const App: React.FC = () => {
             {userData && (
               <>
                 <h2>{userData.user.fullName}</h2>
-                <h3>{userData.user.isClient === 0 ? userData.user.role : 'Cliente'}</h3>
+                <h3>{'Cliente'}</h3>
               </>
             )}
           </div>

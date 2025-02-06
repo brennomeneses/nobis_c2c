@@ -53,7 +53,7 @@ const Dashboard: React.FC = () => {
     key: '/learning',
     label: 'Learning',
   }, {
-    key: '/comunicados',
+    key: 'learning/comunicados',
     label: 'Mensagens',
   }, {
     key: '/transparencia',
