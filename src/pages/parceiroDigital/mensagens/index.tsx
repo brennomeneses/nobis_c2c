@@ -205,7 +205,7 @@ const Mensageria = () => {
           >
             <Select
               allowClear
-              //mode="multiple"
+              mode="multiple"
               notFoundContent="Nenhum projeto encontrado"
               style={{ width: '100%' }}
               placeholder="Selecione os projetos"
