@@ -31,7 +31,6 @@ const Mensageria = () => {
     const options = {
       method: 'GET',
       headers: {
-        'User-Agent': 'insomnia/10.1.1',
         Authorization: `Bearer ${token}`,
       }
     };
@@ -53,26 +52,19 @@ const Mensageria = () => {
     const options = {
       method: 'GET',
       headers: {
-        'User-Agent': 'insomnia/10.1.1',
         Authorization: `Bearer ${token}`,
       }
     };
 
     try {
-      if (!projectIds || !projectIds.length) {
-        setUsers([]);
-        return;
-      }
-    
-      const projectId = projectIds; // Considera apenas o primeiro projeto
       const response = await fetch(
-        `${baseUrl}/digital_partners/projects/${projectId}`,
+        `${baseUrl}/digital_partners/projects/users/${projectIds.join('/')}`,
         options
-      );
-    
-      const projectData = await response.json();
-      const users = projectData.users || [];
-    
+      )
+
+      const usersFromProjects = await response.json() as Record<string, string>[];
+
+      const allUsers = usersFromProjects.flat();
       const uniqueUsers = Array.from(
         new Map(
           users.map((user: Record<string, string>) => [user.uuid, user])
