@@ -38,7 +38,7 @@ export default function Inicio() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/profile/${uuid}`);
+        const response = await fetch(`${baseUrl}/users/profile/${uuid}`);
         if (!response.ok) {
           throw new Error('Failed to fetch profile data');
         }
@@ -62,7 +62,7 @@ export default function Inicio() {
     try {
       const formattedBirthdate = moment(values.birthdate, 'DD/MM/YYYY').format('YYYY-MM-DD');
       
-      const response = await fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/${uuid}`, {
+      const response = await fetch(`${baseUrl}/users/${uuid}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function Inicio() {
       message.success('Dados atualizados com sucesso!');
   
       // Atualizar o estado com os dados mais recentes, sem recarregar a página
-      const updatedDataResponse = await fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/profile/${uuid}`);
+      const updatedDataResponse = await fetch(`${baseUrl}/users/profile/${uuid}`);
       const updatedData = await updatedDataResponse.json();
   
       setDados(updatedData[0]); // Atualiza os dados
@@ -153,7 +153,7 @@ export default function Inicio() {
               <div style={{
                 display: "flex"
               }}>
-                <Avatar src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${avatar}`} size={100} />
+                <Avatar src={`${baseUrl}/uploads/${avatar}`} size={100} />
                 <Upload
                   name="profilePicture"
                   listType="picture-circle"
@@ -334,7 +334,7 @@ export default function Inicio() {
           ) : (
             <Row gutter={16}>
               <Col xs={24} sm={6} style={{ textAlign: 'center' }}>
-                <Avatar src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${avatar}`} size={100} />
+                <Avatar src={`${baseUrl}/uploads/${avatar}`} size={100} />
               </Col>
               <Col xs={24} sm={18}>
                 <p><strong>Nome:</strong> {fullName}</p>

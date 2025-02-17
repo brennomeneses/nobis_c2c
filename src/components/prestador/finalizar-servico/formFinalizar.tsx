@@ -111,7 +111,7 @@ const App: React.FC = () => {
           body: JSON.stringify({ status: "completed" })
         };
 
-        fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/${response.uuid}/status`, endService)
+        fetch(`${baseUrl}/services/${response.uuid}/status`, endService)
           .then(response => response.json())
           .then(response => { localStorage.setItem('serviceUUID', response.uuid); window.location.href = `/avaliar-cliente/${response.user}` })
           .catch(err => console.error(err));

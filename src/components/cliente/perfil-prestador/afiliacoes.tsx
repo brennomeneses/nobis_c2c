@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Col, Row } from 'antd';
+import baseUrl from '../../assets/schemas/baseUrl';
 
 interface Partner {
   uuid: string;
@@ -19,7 +20,7 @@ const Afiliacoes: React.FC<AfiliacoesProps> = ({ partners }) => (
         <Card title={`Projeto ${partner.title}`}>
           {partner.image ? (
             <img
-              src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${partner.image}`}
+              src={`${baseUrl}/uploads/${partner.image}`}
               alt={partner.orgName}
               style={{ width: '100%', height: '200px', backgroundSize: 'cover',  objectFit: 'cover', objectPosition: 'center' }}
             />

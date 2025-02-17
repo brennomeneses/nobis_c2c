@@ -101,7 +101,7 @@ export default function Inicio() {
       }
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/room/${uuid}/status`, options)
+    fetch(`${baseUrl}/services/room/${uuid}/status`, options)
       .then(response => response.json())
       .then(data => {
         const userData = {

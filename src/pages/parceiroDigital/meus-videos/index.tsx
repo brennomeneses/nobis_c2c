@@ -134,7 +134,7 @@ const MeusVideos = () => {
                 cover={
                   <img
                     alt="example"
-                    src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${video.thumbnail}`}
+                    src={`${baseUrl}/uploads/${video.thumbnail}`}
                   />
                 }
               >

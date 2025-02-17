@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Dados from '../../../components/prestador/perfil-cliente/dados-pessoais';
 import Avaliacoes from '../../../components/prestador/perfil-cliente/avaliacoes';
 import Footer from '../../../components/prestador/footer';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const url = window.location.href;
@@ -13,7 +14,7 @@ export default function Inicio() {
     const fetchData = async () => {
       try {
         console.log('Fetching data for UUID:', uuid);
-        const response = await fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/profile/${uuid}`);
+        const response = await fetch(`${baseUrl}/users/profile/${uuid}`);
         if (!response.ok) {
           throw new Error('Failed to fetch profile data');
         }

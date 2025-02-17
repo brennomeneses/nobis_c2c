@@ -107,7 +107,7 @@ export default function Inicio() {
                                 <Card
                                   hoverable
                                   style={{ width: 200, margin: '0 10px 0 10px' }}
-                                  cover={<img alt="example" src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${video.thumbnail}`} />}
+                                  cover={<img alt="example" src={`${baseUrl}/uploads/${video.thumbnail}`} />}
                                 >
                                   <Card.Meta title={video.title} />
                                   {video.tags.map((tag) => (
@@ -177,7 +177,7 @@ export default function Inicio() {
                           nome={solicitacao.client.fullName}
                           nota={reduceRating(solicitacao.client.clientRatings)}
                           serviceUUID={solicitacao.uuid}
-                          foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${solicitacao.client.avatar}`}
+                          foto={`${baseUrl}/uploads/${solicitacao.client.avatar}`}
                           chatroomUUID={solicitacao.room.uuid}
                         />
                       </Col>
@@ -200,7 +200,7 @@ export default function Inicio() {
                         <Servicos
                           nome={solicitacao.client.fullName}
                           nota={reduceRating(solicitacao.client.clientRatings)}
-                          foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${solicitacao.client.avatar}`}
+                          foto={`${baseUrl}/uploads/${solicitacao.client.avatar}`}
                           chatroomUUID={solicitacao.room.uuid}
                         />
                       </Col>

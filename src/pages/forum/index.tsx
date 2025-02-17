@@ -66,7 +66,7 @@ export default function Classes() {
                     uuid={post.uuid}
                     date={new Date(post.createdAt).toLocaleDateString()}
                     comentarios={post.count}
-                    foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${post.userAvatar}`}
+                    foto={`${baseUrl}/uploads/${post.userAvatar}`}
                   />
                   <br />
                 </Col>

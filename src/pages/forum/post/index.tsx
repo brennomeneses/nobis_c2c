@@ -6,6 +6,7 @@ import Responder from '../../../components/forum/enviarResposta'
 import Resposta from '../../../components/forum/respostas'
 import Prestador from '../../../components/prestador/footer';
 import Cliente from '../../../components/cliente/footer';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Classes() {
   const authToken = localStorage.getItem('authToken');
@@ -24,7 +25,7 @@ export default function Classes() {
       }
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/forums/${uuid}`, options)
+    fetch(`${baseUrl}/forums/${uuid}`, options)
       .then(response => response.json())
       .then(response => {
         console.log(response);
@@ -49,7 +50,7 @@ export default function Classes() {
             data={new Date(post.createdAt).toLocaleDateString()}
             hora={new Date(post.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
             op={post.user.fullName}
-            foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${post.user.avatar}`}
+            foto={`${baseUrl}/uploads/${post.user.avatar}`}
           />
         ) : (
           <p>Carregando...</p>
@@ -65,7 +66,7 @@ export default function Classes() {
                 nome={resposta.user.fullName}
                 data={new Date(resposta.createdAt).toLocaleDateString()}
                 hora={new Date(resposta.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-                foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${resposta.user.avatar}`}
+                foto={`${baseUrl}/uploads/${resposta.user.avatar}`}
               />
               <br/><br/>
             </>

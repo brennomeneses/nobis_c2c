@@ -49,7 +49,7 @@ const App: React.FC = () => {
       {userData && (
         <div className="destaque">
           <div className="destaqueImg">
-            <img className="iconPesquisa" src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${userData.user.avatar}`} />
+            <img className="iconPesquisa" src={`${baseUrl}/uploads/${userData.user.avatar}`} />
           </div>
           <div className="destaquePrestador">
             {userData && (
