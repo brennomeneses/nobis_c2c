@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import InputMask from 'react-input-mask';
+import moment from 'moment';
+import baseUrl from '../assets/schemas/baseUrl';
 import { Form, Input, Button, Radio, Select, Checkbox, Upload, InputNumber, message, notification, Popover, Alert, RadioChangeEvent } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import moment from 'moment';
-import { validateCNPJ, validateCPF } from '../assets/schemas/validateDocuments';
-import { Link } from 'react-router-dom';
-import { countries, deficiencias, escolaridade, familias, profissoes, racas } from '../assets/schemas/signUpSchemas';
-import baseUrl from '../assets/schemas/baseUrl';
 import { useNavigate } from 'react-router-dom';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { validateCNPJ, validateCPF } from '../assets/schemas/validateDocuments';
+import { countries, deficiencias, escolaridade, familias, profissoes, racas } from '../assets/schemas/signUpSchemas';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -52,7 +51,6 @@ const RegistrationForm = () => {
       const response = await fetch(`${baseUrl}/users/into/project/${projectCode}`, {
         method: 'PUT',
         headers: {
-          'User-Agent': 'insomnia/10.1.1',
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
@@ -157,7 +155,7 @@ const RegistrationForm = () => {
     formData.append('cep', values.cep);
     formData.append('address', values.rua);
     formData.append('number', values.numero);
-    formData.append('digitalPartnerCode', pdCode || '');
+    formData.append('projectCode', pdCode || '');
     formData.append('complement', values.complemento);
     formData.append('isLookingForJob', values.isLookingForJob ? 'false' : 'true');
     formData.append('role', serviceType === 'provide' ? values.services : '');

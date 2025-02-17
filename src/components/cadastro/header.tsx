@@ -14,7 +14,7 @@ const App: React.FC = () => {
           <>
             <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
               <h2 className='tituloCadastro'>Cadastro de Prestador</h2>
-              <p style={{ marginTop: "-5%" }}>Código do Parceiro Digital: {pdCode} </p>
+              <p style={{ marginTop: "-5%" }}>Código do Projeto: {pdCode} </p>
               <p style={{ marginTop: "-3%", fontSize: '18px' }}>Já possui conta? <Link to={`/login/${pdCode}`}>Faça Login</Link></p>
             </div>
             </>
