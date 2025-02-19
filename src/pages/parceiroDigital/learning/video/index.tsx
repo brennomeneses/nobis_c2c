@@ -98,7 +98,7 @@ const Videos = () => {
                 <Card
                   hoverable
                   style={{ width: 300 }}
-                  cover={<img alt="example" src={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${video.thumbnail}`} />}
+                  cover={<img alt="example" src={`${baseUrl}/uploads/${video.thumbnail}`} />}
                 >
                   <Meta title={video.title} />
                   {

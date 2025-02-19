@@ -1,1 +1,1 @@
-export default "https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host"
+export default "https://api-protocol.nobisapp.com.br"

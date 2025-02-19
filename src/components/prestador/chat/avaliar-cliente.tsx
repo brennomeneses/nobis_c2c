@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Rate, Divider } from 'antd';
+import baseUrl from "../../assets/schemas/baseUrl";
 
 const App: React.FC = () => {
    const authToken = localStorage.getItem('authToken');
@@ -26,7 +27,7 @@ const App: React.FC = () => {
          })
       };
 
-      fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/${uuid}/rate`, options)
+      fetch(`${baseUrl}/services/${uuid}/rate`, options)
          .then(response => response.text())
          .then(response => {
             localStorage.removeItem("serviceUUID")

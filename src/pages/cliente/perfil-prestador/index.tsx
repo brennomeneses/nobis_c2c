@@ -10,6 +10,7 @@ import Solicitar from '../../../components/cliente/perfil-prestador/solicitar';
 import Footer from '../../../components/cliente/footer';
 import reduceRating from '../../../components/assets/schemas/reduceRating';
 import Afiliacoes from '../../../components/cliente/perfil-prestador/afiliacoes';
+import baseUrl from '../../../components/assets/schemas/baseUrl';
 
 export default function Inicio() {
   const authToken = localStorage.getItem('authToken');
@@ -31,7 +32,7 @@ export default function Inicio() {
       },
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/users/profile/${uuid}`, options)
+    fetch(`${baseUrl}/users/profile/${uuid}`, options)
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
@@ -54,7 +55,7 @@ export default function Inicio() {
       },
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/${uuid}`, service)
+    fetch(`${baseUrl}/services/${uuid}`, service)
       .then((response) => response.json())
       .then((response) => {
         window.location.href = `/chat/${response.room}`;
@@ -84,7 +85,7 @@ export default function Inicio() {
       <div className='container'>
         <Dados
           nome={dadosPrestador.fullName}
-          foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${dadosPrestador.avatar}`}
+          foto={`${baseUrl}/uploads/${dadosPrestador.avatar}`}
           profissao={dadosPrestador.role}
           nota={
             dadosPrestador.clientRatings.length <= 0

@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-export const socket = io("https://brenno-envoriment-chat.1pc5en.easypanel.host", {
+export const socket = io("https://api-chat-protocol.nobisapp.com.br", {
   auth: {
     token: localStorage.getItem('authToken')
   },

@@ -38,7 +38,7 @@ const CriarProjeto = () => {
     };
 
     fetch(
-      "https://brenno-envoriment-node.1pc5en.easypanel.host/digital_partners/create",
+      `${baseUrl}/digital_partners/create`,
       options
     )
       .then((response) => response.json())

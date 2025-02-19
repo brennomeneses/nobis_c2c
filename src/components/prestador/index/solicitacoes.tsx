@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Modal, message } from 'antd';
 import { StarFilled } from '@ant-design/icons';
+import baseUrl from '../../assets/schemas/baseUrl';
 
 const App: React.FC<{ foto: string, nome: string, nota: number, serviceUUID: string, chatroomUUID: string }> = ({ foto, nome, nota, serviceUUID, chatroomUUID }) => {
   const authToken = localStorage.getItem('authToken');
@@ -28,7 +29,7 @@ const App: React.FC<{ foto: string, nome: string, nota: number, serviceUUID: str
       body: JSON.stringify({ status })
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/${serviceUUID}/status`, options)
+    fetch(`${baseUrl}/services/${serviceUUID}/status`, options)
       .then(response => {
         if (response.ok) {
           setIsModalOpen(false);

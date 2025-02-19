@@ -93,7 +93,7 @@ export default function Inicio() {
               <Link to={`/prestador/${prestador.uuid}`} key={prestador.id}>
                 <Card
                   nome={prestador.fullName}
-                  foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${prestador.avatar}`}
+                  foto={`${baseUrl}/uploads/${prestador.avatar}`}
                   servico={prestador.role}
                   nota={prestador.clientRatings.lenght === 0 ?
                     "Cliente não possui avaliações"

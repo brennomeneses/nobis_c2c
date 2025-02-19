@@ -48,7 +48,9 @@ const Mensageria = () => {
   }, [token]);
 
   // Fetch users for all selected projects
-  const fetchUsersByProjects = async (projectIds: string[]) => {
+  const fetchUsersByProjects = async (projectId: string) => {
+    setSelectedUsers([]);
+    form.resetFields(['users']);
     const options = {
       method: 'GET',
       headers: {
@@ -58,21 +60,16 @@ const Mensageria = () => {
 
     try {
       const response = await fetch(
-        `${baseUrl}/digital_partners/projects/users/${projectIds.join('/')}`,
+        `${baseUrl}/digital_partners/projects/users/${projectId}`,
         options
       )
 
       const usersFromProjects = await response.json() as Record<string, string>[];
 
       const allUsers = usersFromProjects.flat();
-      const uniqueUsers = Array.from(
-        new Map(
-          users.map((user: Record<string, string>) => [user.uuid, user])
-        ).values()
-      );
     
       setUsers(
-        uniqueUsers.map((user) => ({
+        allUsers.map((user) => ({
           label: user.fullName,
           value: user.uuid,
         }))
@@ -197,7 +194,6 @@ const Mensageria = () => {
           >
             <Select
               allowClear
-              mode="multiple"
               notFoundContent="Nenhum projeto encontrado"
               style={{ width: '100%' }}
               placeholder="Selecione os projetos"
@@ -236,8 +232,9 @@ const Mensageria = () => {
               <Button
                 type="primary"
                 onClick={() => {
-                  const allUserIds = users.map((user) => user.value); // Obtém os valores de todas as opções
-                  setSelectedUsers(allUserIds);
+                  // Obtém os valores de todas as opções
+                  const allUserIds = users?.map((user) => user.value).filter((value): value is string => value !== null && value !== undefined); 
+                  setSelectedUsers(allUserIds ?? []);
                   form.setFieldsValue({ users: allUserIds });
                 }}
               >

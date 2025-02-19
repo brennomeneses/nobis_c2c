@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Rate, Divider, Button, Input } from 'antd';
+import baseUrl from "../../assets/schemas/baseUrl";
 const { TextArea } = Input;
 
 const App: React.FC = () => {
@@ -26,7 +27,7 @@ const App: React.FC = () => {
          })
       };
 
-      fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/services/${uuid}`, options)
+      fetch(`${baseUrl}/services/${uuid}`, options)
          .then(response => response.json())
          .then(response => {
             window.location.href = "/historico"

@@ -55,7 +55,7 @@ export default function Inicio() {
           <Chat
             key={sala.uuid}
             nome={sala.user[0]?.fullName}
-            foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${sala.user[0]?.avatar}`} 
+            foto={`${baseUrl}/uploads/${sala.user[0]?.avatar}`} 
             msg={sala.messages && sala.messages.length > 0 ? sala.messages[0].content : ''}
             uuid={sala.uuid}
             date={new Date(sala.updatedAt).toLocaleDateString()}
@@ -72,7 +72,7 @@ export default function Inicio() {
           <Chat
             key={sala.uuid}
             nome={sala.user[0]?.fullName}
-            foto={`https://brenno-envoriment-node.1pc5en.easypanel.host/uploads/${sala.user[0]?.avatar}`} 
+            foto={`${baseUrl}/uploads/${sala.user[0]?.avatar}`} 
             msg={sala.messages && sala.messages.length > 0 ? sala.messages[0].content : ''}
             uuid={sala.uuid}
             date={new Date(sala.updatedAt).toLocaleDateString()}

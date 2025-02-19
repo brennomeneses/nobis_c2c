@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Button } from 'antd';
+import baseUrl from '../assets/schemas/baseUrl';
 
 const { TextArea } = Input;
 
@@ -21,7 +22,7 @@ const Case = () => {
       body: JSON.stringify({ content: comentario })
     };
 
-    fetch(`https://brenno-envoriment-node.1pc5en.easypanel.host/forums/${uuid}/answer`, options)
+    fetch(`${baseUrl}/forums/${uuid}/answer`, options)
       .then(response => {
         if (response.ok) {
           window.location.reload();
