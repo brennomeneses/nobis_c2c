@@ -285,10 +285,6 @@ const Routes: React.FC = () => {
       ]
     },
     {
-      path: "/transparencia",
-      element: <TransparenciaPrestador />
-    },
-    {
       path: "/parceiro-digital/login",
       element: <LoginParceiroDigital />
     },
