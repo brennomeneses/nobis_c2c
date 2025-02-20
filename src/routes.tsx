@@ -53,6 +53,7 @@ import ForgotPassword from './pages/forgot-password';
 import LearningIndex from './pages/prestador/learning';
 import PrestadorVideos from './pages/prestador/learning/videos';
 import TransparenciaPrestador from './pages/prestador/transparencia';
+import MensageriaTodas from './pages/parceiroDigital/mensageria-todas';
 
 
 const Routes: React.FC = () => {
@@ -202,6 +203,10 @@ const Routes: React.FC = () => {
         {
           path: "mensageria",
           element: <Mensageria />
+        },
+        {
+          path: "mensageria/todas",
+          element: <MensageriaTodas />
         },
         {
           path: "transparencia",
