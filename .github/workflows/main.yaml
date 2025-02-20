@@ -26,6 +26,8 @@ jobs:
 
       - name: Create or switch to 'dist' branch
         run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           git checkout --orphan dist
           git rm -rf .
           mv dist/* .
