@@ -37,7 +37,7 @@ const CopyLinkButton = ({ link }: { link: string }) => {
 
 const Infos = () => {
   const [dashboard, setDashboard] = useState<null | any>(null);
-  const [projects, setProjects] = useState([]); // Estado para armazenar os projetos
+  const [projects, setProjects] = useState<any>([]); // Estado para armazenar os projetos
   const [selectedProjectUuid, setSelectedProjectUuid] = useState("general"); // Estado para armazenar o uuid do projeto selecionado
 
   const dashboardFields = ['age', 'payments', 'totalServicesStatus', 'genre', 'deficiency', 'lookingForJob', 'nationatity', 'scholarship', 'familySize']
@@ -97,7 +97,7 @@ const Infos = () => {
   }, []);
 
   useEffect(() => {
-    const fetchDashboard = (projectUuid) => {
+    const fetchDashboard = (projectUuid: string) => {
       if (projectUuid) {
         const options = {
           method: 'GET',
