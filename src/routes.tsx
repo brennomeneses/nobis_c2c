@@ -54,6 +54,8 @@ import LearningIndex from './pages/prestador/learning';
 import PrestadorVideos from './pages/prestador/learning/videos';
 import TransparenciaPrestador from './pages/prestador/transparencia';
 import MensageriaTodas from './pages/parceiroDigital/mensageria-todas';
+import MeusProjetos from './pages/parceiroDigital/meus-projetos';
+import EditarProjeto from './pages/parceiroDigital/editar-projeto';
 
 
 const Routes: React.FC = () => {
@@ -219,6 +221,14 @@ const Routes: React.FC = () => {
         {
           path: "criar-projeto",
           element: <CriarProjeto />
+        },
+        {
+          path: "meus-projetos",
+          element: <MeusProjetos />
+        },
+        {
+          path: "meus-projetos/:uuid/editar",
+          element: <EditarProjeto />
         },
         {
           path: "logout",
