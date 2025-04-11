@@ -195,7 +195,7 @@ const Cadastrar = () => {
           <Form.Item<CompanyInfo>
             label="CNPJ"
             name="cnpj"
-            rules={[{ required: true, message: 'Por favor, insira o CNPJ!' }]}
+            rules={[{ required: false, message: 'Por favor, insira o CNPJ!' }]}
           >
             <InputMask mask="99.999.999/9999-99">
               {(inputProps) => <Input {...inputProps} />}
