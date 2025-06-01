@@ -122,7 +122,7 @@ const MensageriaTodas = () => {
           }}
         >
             <Header>
-              <h1>Documentos de Transparência de Projeto</h1>
+              <h1>Mensagens enviadas</h1>
             </Header>
             {loading ? <p>Carregando...</p> : (
               <>

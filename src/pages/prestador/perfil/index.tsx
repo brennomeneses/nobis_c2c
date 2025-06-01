@@ -107,7 +107,7 @@ export default function Inicio() {
 
   const {
     avatar, fullName, clientRatings, email, phone, genre, birthdate: storedBirthdate, address, number, complement, about,
-    city, state, cep, role, birthContry, budget, deficiency, operationRadius, payments = []
+    city, state, cep, role, birthContry, budget, deficiency, operationRadius, portfolioUrl, payments = []
   } = dados;
 
   // Calculando a média de classificação
@@ -143,6 +143,7 @@ export default function Inicio() {
                 birthContry,
                 budget,
                 deficiency,
+                portfolioUrl,
                 serviceRadius: operationRadius,
                 payments: payments.map(payment => payment.type)
               }}
@@ -296,6 +297,9 @@ export default function Inicio() {
                   prefix="R$"
                   placeholder="0,00"
                 />
+              </Form.Item>
+              <Form.Item name="portfolioUrl" label="Valor do Orçamento">
+                <Input placeholder={portfolioUrl} />
               </Form.Item>
               <Form.Item
                 label="Deficiência"
