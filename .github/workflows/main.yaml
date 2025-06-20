@@ -25,6 +25,7 @@ jobs:
         run: npm run build
 
       - name: Create or switch to 'dist' branch
+        if: false
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
