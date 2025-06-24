@@ -46,7 +46,7 @@ export default function MeusVideos() {
   
     try {
       const response = await fetch(
-        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/videos/rate/${currentVideo.videoUuid}`,
+        `https://api-protocol.nobisapp.com.br/videos/rate/${currentVideo.videoUuid}`,
         options
       );
       const result = await response.json();
@@ -83,7 +83,7 @@ export default function MeusVideos() {
   
     try {
       const response = await fetch(
-        `https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/documents/rate/${currentDoc.docUuid}`,
+        `https://api-protocol.nobisapp.com.br/documents/rate/${currentDoc.docUuid}`,
         options
       );
       const result = await response.json();

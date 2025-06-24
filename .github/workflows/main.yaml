@@ -1,12 +1,12 @@
-name: Deploy React Vite Project via FTP
+name: Build and Commit to Dist Branch
 
 on:
   push:
     branches:
-      - main  # Adjust the branch as needed
+      - production  # Adjust the branch as needed
 
 jobs:
-  build-and-deploy:
+  build-and-commit:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,20 +24,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload artifacts for deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist  # Make sure to match the output folder of Vite's build
-
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.ftp_server }}   # FTP server
-          username: ${{ secrets.ftp_username }} # FTP username 
-          password: ${{ secrets.ftp_password }} # FTP password 
-          local-dir: dist/
-          timeout: 120000 # Increase timeout to 120 seconds
-          protocol: ftps
-          server-dir: ./
-
+      - name: Create or switch to 'dist' branch
+        run: |
+          git checkout --orphan dist
+          git rm -rf .
+          mv dist/* .
+          rm -rf dist
+          touch .gitignore
+          echo "node_modules/" >> .gitignore
+          echo "dist/" >> .gitignore
+          git add .
+          git commit -m "Build artifacts committed to dist branch"
+          git push --force origin dist

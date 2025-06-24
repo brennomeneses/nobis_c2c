@@ -61,7 +61,7 @@ const CreatePlaylist = () => {
       })
       .catch(err => console.error(err));
 
-      fetch('https://brenno-envoriment-platform-server-testing.1pc5en.easypanel.host/digital_partners/file', options)
+      fetch('https://api-protocol.nobisapp.com.br/digital_partners/file', options)
       .then(response => response.json())
       .then(response => setDocuments(response))
       .catch(err => console.error(err));

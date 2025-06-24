@@ -60,11 +60,25 @@ const Dashboard: React.FC = () => {
       label: 'Documentos',
     }]
   }, {
-    key: '/parceiro-digital/mensageria',
+    key: 3,
     label: 'Mensagens',
+    children: [{
+      key: '/parceiro-digital/mensageria/todas',
+      label: 'Mensagens Enviadas',
+    }, {
+      key: '/parceiro-digital/mensageria',
+      label: 'Enviar Mensagem',
+    }]
   }, {
-    key: '/parceiro-digital/criar-projeto',
-    label: 'Novo Projeto',
+    key: 4,
+    label: 'Projetos',
+    children: [{
+      key: '/parceiro-digital/criar-projeto',
+      label: 'Criar Projeto',
+    }, {
+      key: '/parceiro-digital/meus-projetos',
+      label: 'Meus Projetos',
+    }]
   }, {
     key: '/parceiro-digital/transparencia',
     label: 'Transparência',
