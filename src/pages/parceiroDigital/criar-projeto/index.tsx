@@ -4,15 +4,39 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import baseUrl from "../../../components/assets/schemas/baseUrl";
+import type { CheckboxOptionType } from "antd/es/checkbox";
+import { Checkbox } from "antd";
 
 type FieldType = {
   proj_name?: string;
   proj_duration?: string;
   proj_desc?: string;
   files?: any;
+  ods?: number[];
 };
 
 const { TextArea } = Input;
+
+const odsOptions: CheckboxOptionType[] = [
+  { label: "ODS 1", value: 1, style: { background: "#E5243B", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 2", value: 2, style: { background: "#DDA63A", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 3", value: 3, style: { background: "#4C9F38", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 4", value: 4, style: { background: "#C5192D", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 5", value: 5, style: { background: "#FF3A21", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 6", value: 6, style: { background: "#26BDE2", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 7", value: 7, style: { background: "#FCC30B", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 8", value: 8, style: { background: "#A21942", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 9", value: 9, style: { background: "#FD6925", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 10", value: 10, style: { background: "#DD1367", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 11", value: 11, style: { background: "#FD9D24", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 12", value: 12, style: { background: "#BF8B2E", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 13", value: 13, style: { background: "#3F7E44", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 14", value: 14, style: { background: "#0A97D9", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 15", value: 15, style: { background: "#56C02B", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 16", value: 16, style: { background: "#00689D", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 17", value: 17, style: { background: "#19486A", color: "#fff", padding: "3px", borderRadius: "4px" } },
+  { label: "ODS 18", value: 18, style: { background: "#7F3718", color: "#fff", padding: "3px", borderRadius: "4px" } },
+];
 
 const CriarProjeto = () => {
   const [users, setUsers] = useState(null);
@@ -58,7 +82,8 @@ const CriarProjeto = () => {
     form.append("title", values.proj_name);
     form.append("description", values.proj_desc);
     form.append("duration", values.proj_duration);
-
+    form.append("ods", JSON.stringify(values.ods || []));
+    
     const options = {
       method: "POST",
       headers: {
@@ -71,7 +96,7 @@ const CriarProjeto = () => {
 
     // Realiza o fetch para criar o projeto
     fetch(
-      baseUrl +"/digital_partners/projects",
+      baseUrl + "/digital_partners/projects",
       options
     )
       .then((response) => response.json())
@@ -142,6 +167,14 @@ const CriarProjeto = () => {
               <Upload maxCount={1} beforeUpload={() => false}>
                 <Button icon={<UploadOutlined />}>Anexar arquivo</Button>
               </Upload>
+            </Form.Item>
+
+            <Form.Item
+              name="ods"
+              label="ODS relacionadas ao projeto"
+              rules={[{ required: true, message: "Selecione pelo menos uma ODS" }]}
+            >
+              <Checkbox.Group options={odsOptions} />
             </Form.Item>
 
             <br />
