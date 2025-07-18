@@ -3,6 +3,7 @@ import { Button, Modal, Space, Table, TableColumnsType } from "antd";
 import { Link } from "react-router-dom";
 import baseUrl from "../../../components/assets/schemas/baseUrl";
 import { useEffect, useState } from "react";
+import { message } from 'antd'
 
 const MeusProjetos = () => {
   const [modal, contextHolder] = Modal.useModal();
@@ -25,7 +26,7 @@ const MeusProjetos = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleDelete = (uuid: string) => {
+  const handleDelete = (id: number) => {
     modal.warning({
       title: 'Deseja realmente excluir o projeto?',
       okText: 'Sim',
@@ -33,21 +34,29 @@ const MeusProjetos = () => {
       okCancel: true,
       cancelText: 'Não',
       onOk() {
-        console.log('OK', uuid);
-        // Make a delete request using our baseUrl
-        fetch(`${baseUrl}/projects/${uuid}`, {
+        fetch(`${baseUrl}/digital_partners/projects/${id}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         })
-        .then(response => response.json())
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Erro ao excluir projeto");
+            }
+            // Remove o projeto da lista
+            setDataSource((prev) => prev.filter((project) => project.id !== id));
+          })
+          .catch((err) => {
+            console.error(err);
+            message.error("Erro ao excluir projeto");
+          });
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancelado");
       },
     });
-  }
+  };
 
   const columns: TableColumnsType<any> = [{
     title: 'Projeto',
@@ -61,7 +70,7 @@ const MeusProjetos = () => {
   }, {
     title: 'Membros',
     key: 'users',
-    render: (_, record) => (<>{record.users.length}</>)
+    render: (_, record) => (<>{Array.isArray(record.users) ? record.users.length : 0}</>)
   }, {
     title: 'Ações',
     key: 'actions',
@@ -82,7 +91,7 @@ const MeusProjetos = () => {
       {contextHolder}
       <h1>Meus Projetos</h1>
 
-      <Table  columns={columns}  dataSource={dataSource}/>
+      <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };

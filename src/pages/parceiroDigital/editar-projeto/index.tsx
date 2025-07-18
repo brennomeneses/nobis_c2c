@@ -31,8 +31,8 @@ const EditarProjeto = () => {
         form.setFieldsValue({
           title: response.title,
           description: response.description,
+          ods: response.ods?.map((o: any) => o.id), // ← isso aqui é crucial!
           duration: response.duration,
-          ods: response.ods,
         });
       })
       .catch((err) => console.error(err));
@@ -75,7 +75,10 @@ const EditarProjeto = () => {
     formdata.append('title', values.title);
     formdata.append('description', values.description);
     formdata.append('ods', JSON.stringify(values.ods));
-    formdata.append('image', values.image.file.originFileObj);
+    formdata.append('duration', String(values.duration));
+    if (values.image?.file?.originFileObj) {
+      formdata.append('image', values.image.file.originFileObj);
+    }
 
     const options = {
       method: 'PUT',
@@ -92,68 +95,57 @@ const EditarProjeto = () => {
       })
       .catch(err => console.error(err));
   };
-  
+
 
   return (
     <div style={{ padding: '16px 48px', backgroundColor: '#fafafa' }}>
       <h1>Editar Projeto</h1>
       {data ? (
         <Form layout="vertical" form={form} onFinish={onFinish}>
-        <Form.Item name="title" label="Título">
-          <Input type="text" value={data.title} />
-        </Form.Item>
-        <Form.Item name="description" label="Descrição">
-          <Input type="text" value={data.description} />
-        </Form.Item>
-        <Form.Item name="ods" label="ODS">
-          <Checkbox.Group options={options} />
-        </Form.Item>
-        {/*}
-        <Form.Item name="image" label="Banner">
-          {data.image && (
-            <>
-              <Image
-                src={`${baseUrl}/uploads/${data.image}`}
-                alt="Imagem de apresentação"
-                width={200}
-                style={{
-                  padding: '9px',
-                  border: '1px solid #ccc',
-                  borderRadius: '10px'
-                }}
-              /><br/>
-            </>
-          )}
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />} type="default">Upload</Button>
-          </Upload>
-        </Form.Item>
-        */}
-        <Form.Item name="mainPictureFilename" label="Imagem de apresentação">
-          {data.mainPictureFilename && (
-            <>
-              <Image
-                src={`${baseUrl}/uploads/${data.mainPictureFilename}`}
-                alt="Imagem de apresentação"
-                width={200}
-                style={{
-                  padding: '9px',
-                  border: '1px solid #ccc',
-                  borderRadius: '10px'
-                }}
-              /><br/>
-            </>
-          )}
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />} type="default">Upload</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">Salvar</Button>
-        </Form.Item>
-      </Form>
+          <Form.Item name="title" label="Título">
+            <Input type="text" />
+          </Form.Item>
+          <Form.Item name="duration"
+            label="Duração (em meses)"
+            rules={[{ required: true, message: 'Por favor, insira a duração do projeto' }]}>
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item name="description" label="Descrição">
+            <Input type="text" />
+          </Form.Item>
+          <Form.Item name="ods" label="ODS">
+            <Checkbox.Group options={options} />
+          </Form.Item>
+          {
+            <Form.Item name="image" label="Banner">
+              {data.image ? (
+                <>
+                  <Image
+                    src={`${baseUrl}/uploads/${data.image}`}
+                    alt="Imagem de apresentação"
+                    width={200}
+                    style={{
+                      padding: '9px',
+                      border: '1px solid #ccc',
+                      borderRadius: '10px'
+                    }}
+                  /><br />
+                </>
+              ) : (
+                <p>Nenhuma imagem cadastrada</p>
+              )}
+              <Upload {...props}>
+                <Button icon={<UploadOutlined />} type="default">Upload</Button>
+              </Upload>
+            </Form.Item>
+          }
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit">Salvar</Button>
+          </Form.Item>
+        </Form>
       ) : (<>Carregando</>)}
-      
+
     </div>
   );
 };
