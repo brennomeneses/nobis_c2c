@@ -5,6 +5,18 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import baseUrl from '../../../components/assets/schemas/baseUrl';
 
+interface IFileAPIResponse { 
+  filename: any; 
+  originalFilename: string 
+  | number 
+  | boolean 
+  | React.ReactElement<any, string | React.JSXElementConstructor<any>> 
+  | Iterable<React.ReactNode> 
+  | React.ReactPortal 
+  | null 
+  | undefined; 
+}
+
 const Header = styled.div`
     width: 100%;
     display: flex;
@@ -67,13 +79,17 @@ const MensageriaTodas = () => {
         <div>
           <p>{record.message}</p>
           <p>
-            <b>Enviado para:</b> {record.user.map((user: { fullName: any; }) => (<>{user.fullName}, </>))}
+            <b>Enviado para:</b> {record.user.map((user: { fullName: string; uuid: string; }) => (
+              <>
+              <a target="_blank" href={`/prestador/${user.uuid}`}>{user.fullName}</a>{", "}
+              </>
+              ))}
           </p>
           <p>
             <b>Anexos:</b> {record.files ? 
-              record.files.map((file: { filename: any; originalFilename: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => <a href={`${baseUrl}/uploads/${file.filename}`}>{file.originalFilename}</a>) 
+              record.files.map((file: IFileAPIResponse) => <a href={`${baseUrl}/uploads/${file.filename}`}>{file.originalFilename}</a>) 
               : 
-              <> Nenhum </>}
+              <> Nenhum arquivo anexado</>}
           </p>
           <p><b>Enviado em:</b> {new Date(record.createdAt).toLocaleString()}</p>
         </div>

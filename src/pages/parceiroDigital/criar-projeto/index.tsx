@@ -11,6 +11,7 @@ type FieldType = {
   proj_name?: string;
   proj_duration?: string;
   proj_desc?: string;
+  proj_video?: string;
   files?: any;
   ods?: number[];
 };
@@ -44,6 +45,12 @@ const CriarProjeto = () => {
   const [form] = Form.useForm();
   const navigation = useNavigate();
   const token = localStorage.getItem("digitalPartnerToken");
+
+
+  const youtubeRegex =
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
+
 
   const openNotificationWithSuccess = () => {
     notification.success({
@@ -84,6 +91,7 @@ const CriarProjeto = () => {
     form.append("duration", values.proj_duration);
     form.append("ods", JSON.stringify(values.ods || []));
     
+
     const options = {
       method: "POST",
       headers: {
@@ -161,6 +169,24 @@ const CriarProjeto = () => {
               ]}
             >
               <TextArea rows={4} placeholder="Descrição do Projeto" />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label="Video de apresentação"
+              name="proj_video"
+              rules={[
+                {
+                  required: false,
+                  validator: (_, value) => {
+                    if (!value || youtubeRegex.test(value)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Insira um link válido do YouTube"));            
+                  }
+                },
+              ]}
+            >
+              <Input placeholder="Ex: https://youtu.be/link" />
             </Form.Item>
 
             <Form.Item<FieldType> label="Imagem de Capa do Projeto" name="files">

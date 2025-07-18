@@ -117,7 +117,7 @@ const Mensageria = () => {
 
     const formData = new FormData();
     formData.append("targetsString", JSON.stringify(values.users));
-    formData.append("projectsUuid", JSON.stringify(values.projects));
+    formData.append("projectsUuid", JSON.stringify([values.projects]));
     formData.append("subject", values.subject ?? "");
     formData.append("content", values.message ?? "");
 

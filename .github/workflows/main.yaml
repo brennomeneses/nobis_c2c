@@ -24,8 +24,17 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Upload artifacts for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist  # Make sure to match the output folder of Vite's build
+
       - name: Create or switch to 'dist' branch
+        if: false
         run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           git checkout --orphan dist
           git rm -rf .
           mv dist/* .
