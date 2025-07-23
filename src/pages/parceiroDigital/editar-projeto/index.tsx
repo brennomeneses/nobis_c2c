@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import baseUrl from "../../../components/assets/schemas/baseUrl";
 import { FormProps } from "antd/lib";
+import { DateTime } from "luxon";
+
+
 
 const EditarProjeto = () => {
   const { uuid } = useParams();
@@ -27,12 +30,18 @@ const EditarProjeto = () => {
     fetch(`${baseUrl}/digital_partners/projects/${uuid}`, options)
       .then((response) => response.json())
       .then((response) => {
-        setData(response)
+        setData(response);
+
+        const endsAt = DateTime.fromISO(response.endsAt);
+        const now = DateTime.now();
+        const duration = Math.max(Math.round(endsAt.diff(now, 'months').months), 0);
+
+
         form.setFieldsValue({
           title: response.title,
           description: response.description,
-          ods: response.ods?.map((o: any) => o.id), // ← isso aqui é crucial!
-          duration: response.duration,
+          ods: response.ods?.map((o: any) => o.id),
+          duration,
         });
       })
       .catch((err) => console.error(err));
@@ -76,8 +85,11 @@ const EditarProjeto = () => {
     formdata.append('description', values.description);
     formdata.append('ods', JSON.stringify(values.ods));
     formdata.append('duration', String(values.duration));
-    if (values.image?.file?.originFileObj) {
-      formdata.append('image', values.image.file.originFileObj);
+
+    const imageFile = values.image;
+
+    if (imageFile instanceof File) {
+      formdata.append("image", imageFile);
     }
 
     const options = {
@@ -105,40 +117,49 @@ const EditarProjeto = () => {
           <Form.Item name="title" label="Título">
             <Input type="text" />
           </Form.Item>
+
           <Form.Item name="duration"
             label="Duração (em meses)"
             rules={[{ required: true, message: 'Por favor, insira a duração do projeto' }]}>
             <Input type="number" />
           </Form.Item>
+
           <Form.Item name="description" label="Descrição">
             <Input type="text" />
           </Form.Item>
+
           <Form.Item name="ods" label="ODS">
             <Checkbox.Group options={options} />
           </Form.Item>
-          {
-            <Form.Item name="image" label="Banner">
-              {data.image ? (
-                <>
-                  <Image
-                    src={`${baseUrl}/uploads/${data.image}`}
-                    alt="Imagem de apresentação"
-                    width={200}
-                    style={{
-                      padding: '9px',
-                      border: '1px solid #ccc',
-                      borderRadius: '10px'
-                    }}
-                  /><br />
-                </>
-              ) : (
-                <p>Nenhuma imagem cadastrada</p>
-              )}
-              <Upload {...props}>
-                <Button icon={<UploadOutlined />} type="default">Upload</Button>
-              </Upload>
-            </Form.Item>
-          }
+
+          <Form.Item name="image" label="Banner">
+            {data.image ? (
+              <>
+                <Image
+                  src={`${baseUrl}/uploads/${data.image}`}
+                  alt="Imagem de apresentação"
+                  width={200}
+                  style={{
+                    padding: '9px',
+                    border: '1px solid #ccc',
+                    borderRadius: '10px'
+                  }}
+                /><br />
+              </>
+            ) : (
+              <p>Nenhuma imagem cadastrada</p>
+            )}
+            <Upload
+              beforeUpload={() => false}
+              maxCount={1}
+              onChange={({ file }) => {
+                form.setFieldsValue({ image: file });
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          </Form.Item>
+
 
           <Form.Item>
             <Button type="primary" htmlType="submit">Salvar</Button>
