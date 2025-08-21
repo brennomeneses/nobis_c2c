@@ -16,7 +16,7 @@ export default function Inicio() {
   const [profissao, setProfissao] = React.useState(null);
   const [prestadores, setPrestadores] = React.useState([]);
   const [mostrarCards, setMostrarCards] = React.useState(false);
-  const [mensagem, setMensagem] = React.useState('');
+  const [mensagem, setMensagem] = React.useState<string | JSX.Element>('');
 
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
@@ -42,7 +42,7 @@ export default function Inicio() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`
+          Authorization: authToken ? `Bearer ${authToken}` : ''
         },
         body: JSON.stringify({ role: profissao })
       };
@@ -76,7 +76,7 @@ export default function Inicio() {
 
   return (
     <>
-      {isMobile ? <HeaderMobile /> : <Header />}
+      { authToken && (isMobile ? <HeaderMobile /> : <Header />)}
       <br /><br />
       <div className='container'>
         <Busca onSearchSubmit={handleSearchSubmit} />
@@ -98,7 +98,7 @@ export default function Inicio() {
                   nota={prestador.clientRatings.lenght === 0 ?
                     "Cliente não possui avaliações"
                     : prestador.clientRatings.reduce((acc, rating) => acc + ((rating.payment + rating.helpfulness + rating.respect) / 3), 0) / prestador.clientRatings.length}
-                  distancia={`${prestador.distance.toFixed(0)}km`}
+                  distancia={authToken ? `${prestador.distance.toFixed(0)}km` : ""}
                   trabalhoRemoto={prestador.remoteWork}
                 />
               </Link>
