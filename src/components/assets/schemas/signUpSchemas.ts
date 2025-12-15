@@ -306,6 +306,7 @@ const profissoes = [
   "Serviço de limpeza de caixas d'água",
   "Serviço de manutenção predial",
   "Serviço de marcenaria",
+  "Serviço de ótica",
   "Serviço de pintura residencial",
   "Serviço de podas de árvore",
   "Serviço de reboco e alvenaria",
