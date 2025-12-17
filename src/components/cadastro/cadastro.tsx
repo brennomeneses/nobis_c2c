@@ -131,6 +131,17 @@ const RegistrationForm = () => {
   const onDisabilityChange = (e: RadioChangeEvent) => setHasDisability(e.target.value === 'yes');
   const handleCheckboxChange = (e: CheckboxChangeEvent) => setChecked(e.target.checked);
 
+  const isEmailNotificationFailure = (payload: any) => {
+    const rawMessage =
+      typeof payload === 'string' ? payload : typeof payload?.message === 'string' ? payload.message : '';
+
+    return typeof rawMessage === 'string' && rawMessage.includes('ECONNREFUSED') && rawMessage.includes(':465');
+  };
+
+  const redirectToLogin = () => {
+    window.location.href = '/login';
+  };
+
   const handleSubmit = async (values: any) => {
     const formData = new FormData();
     formData.append('fullName', values.name);
@@ -178,11 +189,25 @@ const RegistrationForm = () => {
         body: formData,
       });
 
-      const data = await response.json(); // <- sempre tenta extrair
+      const contentType = response.headers.get('content-type') || '';
+      let data: any = null;
+
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
 
       if (response.ok) {
-        window.location.href = '/login';
-      } else if (data.errors) {
+        redirectToLogin();
+      } else if (isEmailNotificationFailure(data)) {
+        notification.warning({
+          message: 'Cadastro realizado, mas houve um aviso',
+          description: 'Não conseguimos enviar o e-mail de confirmação, mas seu cadastro foi criado.',
+          duration: 5,
+        });
+        redirectToLogin();
+      } else if (data && typeof data === 'object' && data.errors) {
         // Exibe erros nos campos do formulário
         form.setFields(
           Object.entries(data.errors).map(([field, message]) => ({
@@ -204,9 +229,14 @@ const RegistrationForm = () => {
           duration: 6,
         });
       } else {
+        const fallbackMessage =
+          typeof data === 'string'
+            ? data || 'Erro desconhecido. Tente novamente.'
+            : data?.message || 'Erro desconhecido. Tente novamente.';
+
         notification.error({
           message: 'Erro ao cadastrar',
-          description: data.message || 'Erro desconhecido. Tente novamente.',
+          description: fallbackMessage,
           duration: 5,
         });
       }
@@ -571,7 +601,7 @@ const RegistrationForm = () => {
           <Form.Item name="badges" valuePropName="checked" label={
             <div style={{ display: "flex", alignItems: "center" }}>
               <p style={{ flexShrink: 0 }}>Desejo me identificar na plataforma como:</p>
-              <Popover content="Inserção em determinados grupos na plataforma. Eles ajudam a destacar suas características, mas não servem como critério de exclusão na hora da contratação de serviços... fique tranquilo!"><div className="hoverQtn" style={{ flexShrink: 0, width: "8%", marginLeft: "5%" }}>?</div></Popover>
+              <Popover content="Inserção em determinados0 grupos na plataforma. Eles ajudam a destacar suas características, mas não servem como critério de exclusão na hora da contratação de serviços... fique tranquilo!"><div className="hoverQtn" style={{ flexShrink: 0, width: "8%", marginLeft: "5%" }}>?</div></Popover>
             </div>
           }>
             <Checkbox.Group options={[
