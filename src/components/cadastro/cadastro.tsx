@@ -130,6 +130,15 @@ const RegistrationForm = () => {
   const onServiceTypeChange = (e: RadioChangeEvent) => setServiceType(e.target.value);
   const onDisabilityChange = (e: RadioChangeEvent) => setHasDisability(e.target.value === 'yes');
   const handleCheckboxChange = (e: CheckboxChangeEvent) => setChecked(e.target.checked);
+  const createMatchValidator = (fieldName: string, errorMessage: string) => ({
+    validator: (_: any, value: string) => {
+      const compareTo = form.getFieldValue(fieldName);
+      if (!value || value === compareTo) {
+        return Promise.resolve();
+      }
+      return Promise.reject(new Error(errorMessage));
+    },
+  });
 
   const isEmailNotificationFailure = (payload: any) => {
     const rawMessage =
@@ -385,8 +394,34 @@ const RegistrationForm = () => {
         <Input />
       </Form.Item>
 
+      {/* confirmEmail */}
+      <Form.Item
+        name="confirmEmail"
+        label="Confirmar Email"
+        dependencies={['email']}
+        rules={[
+          { required: true, message: 'Por favor, confirme seu e-mail!' },
+          createMatchValidator('email', 'Os e-mails nao coincidem.'),
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
       {/* password */}
       <Form.Item name="password" label="Senha" rules={[{ required: true, message: 'Por favor, insira sua senha!' }]}>
+        <Input.Password />
+      </Form.Item>
+
+      {/* confirmPassword */}
+      <Form.Item
+        name="confirmPassword"
+        label="Confirmar Senha"
+        dependencies={['password']}
+        rules={[
+          { required: true, message: 'Por favor, confirme sua senha!' },
+          createMatchValidator('password', 'As senhas nao coincidem.'),
+        ]}
+      >
         <Input.Password />
       </Form.Item>
 
