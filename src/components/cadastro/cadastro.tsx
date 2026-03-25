@@ -140,11 +140,23 @@ const RegistrationForm = () => {
     },
   });
 
-  const isEmailNotificationFailure = (payload: any) => {
-    const rawMessage =
-      typeof payload === 'string' ? payload : typeof payload?.message === 'string' ? payload.message : '';
+  const getPayloadMessage = (payload: any) =>
+    typeof payload === 'string' ? payload : typeof payload?.message === 'string' ? payload.message : '';
 
-    return typeof rawMessage === 'string' && rawMessage.includes('ECONNREFUSED') && rawMessage.includes(':465');
+  const isPostSignupSideEffectFailure = (payload: any) => {
+    const rawMessage = getPayloadMessage(payload).toLowerCase();
+
+    if (!rawMessage) {
+      return false;
+    }
+
+    return (
+      (rawMessage.includes('econnrefused') && rawMessage.includes(':465')) ||
+      rawMessage.includes('certificado autoassinado') ||
+      rawMessage.includes('self-signed certificate') ||
+      rawMessage.includes('unable_to_verify_leaf_signature') ||
+      rawMessage.includes('--use-system-ca')
+    );
   };
 
   const redirectToLogin = () => {
@@ -209,10 +221,10 @@ const RegistrationForm = () => {
 
       if (response.ok) {
         redirectToLogin();
-      } else if (isEmailNotificationFailure(data)) {
+      } else if (isPostSignupSideEffectFailure(data)) {
         notification.warning({
           message: 'Cadastro realizado, mas houve um aviso',
-          description: 'Não conseguimos enviar o e-mail de confirmação, mas seu cadastro foi criado.',
+          description: 'Seu cadastro foi criado, mas houve falha em uma etapa posterior de notificacao ou confirmacao.',
           duration: 5,
         });
         redirectToLogin();
